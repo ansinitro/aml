@@ -1,0 +1,4 @@
+Algorithm,Best Parameters
+Decision Tree,"{'max_depth': 20, 'min_samples_leaf': 1, 'min_samples_split': 2}"
+Random Forest,"{'max_depth': 15, 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 150}"
+KNN,"{'metric': 'manhattan', 'n_neighbors': 7, 'weights': 'distance'}"

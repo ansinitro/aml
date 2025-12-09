@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1: Water Level Prediction - Presentation</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e293b;
+            --bg: #f8fafc;
+            --text: #334155;
+            --accent: #3b82f6;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--secondary);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .slides-container {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100vh;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            position: relative;
+            background: white;
+        }
+
+        .slide:nth-child(even) {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .slide-content {
+            max-width: 1100px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2.4rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            padding-left: 1rem;
+            border-left: 5px solid var(--accent);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        p,
+        li {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #475569;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 1rem;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            text-align: center;
+            padding: 0.8rem 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight-row {
+            background: linear-gradient(90deg, #ecfdf5, #d1fae5) !important;
+            font-weight: 600;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 2px solid #93c5fd;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 2rem;
+            font-size: 1rem;
+            color: #94a3b8;
+        }
+
+        .nav-hint {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 2rem;
+            font-size: 1rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .key {
+            display: inline-block;
+            background: #e2e8f0;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-family: monospace;
+            border: 1px solid #cbd5e1;
+        }
+
+        code {
+            background: #e2e8f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #7c3aed;
+            font-size: 1.1rem;
+        }
+
+        .metric {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        /* Navigation arrows */
+        .nav-arrows {
+            position: fixed;
+            bottom: 50%;
+            transform: translateY(50%);
+            z-index: 100;
+        }
+
+        .nav-arrows.left {
+            left: 1rem;
+        }
+
+        .nav-arrows.right {
+            right: 1rem;
+        }
+
+        .nav-arrow {
+            background: rgba(37, 99, 235, 0.1);
+            border: none;
+            color: var(--primary);
+            font-size: 2rem;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-arrow:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .nav-arrows {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progress"></div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows left">
+        <button class="nav-arrow" id="prevBtn" onclick="navigate(-1)">←</button>
+    </div>
+    <div class="nav-arrows right">
+        <button class="nav-arrow" id="nextBtn" onclick="navigate(1)">→</button>
+    </div>
+
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- Slide 1: Title -->
+        <div class="slide">
+            <div class="slide-content" style="text-align: center;">
+                <p
+                    style="font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase; color: #64748b; margin-bottom: 1rem;">
+                    Advanced Machine Learning • Lab 1
+                </p>
+                <h1>Water Level Prediction</h1>
+                <p style="font-size: 1.8rem; color: var(--secondary); margin: 1.5rem 0;">
+                    Comparative Analysis of Regression Models
+                </p>
+                <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+                    <p><strong>Algorithms:</strong> Decision Tree • Random Forest • KNN • Hybrid</p>
+                    <p style="margin-top: 1rem; color: #64748b;">December 2024</p>
+                </div>
+            </div>
+            <div class="nav-hint">
+                <span class="key">←</span> <span class="key">→</span> to navigate
+            </div>
+            <div class="footer">Slide 1 / 7</div>
+        </div>
+
+        <!-- Slide 2: Objectives -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Lab Objectives</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>📥 Data Loading</h3>
+                        <p>Download Kazakhstan Basin Water Level dataset from Kaggle using <code>kagglehub</code></p>
+                    </div>
+                    <div class="card">
+                        <h3>🔧 Preprocessing</h3>
+                        <p>Handle Russian columns, extract temporal features, clean missing data</p>
+                    </div>
+                    <div class="card">
+                        <h3>⚙️ Hyperparameter Tuning</h3>
+                        <p>Use GridSearchCV to find optimal parameters for each model</p>
+                    </div>
+                    <div class="card">
+                        <h3>🔬 Hybrid Model</h3>
+                        <p>Implement Stacking Ensemble: Best Model + MLP Neural Network</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">Slide 2 / 7</div>
+        </div>
+
+        <!-- Slide 3: Data -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Dataset Overview</h2>
+                <div class="two-col">
+                    <div>
+                        <h3>Source: Kazhydromet (Kaggle)</h3>
+                        <ul>
+                            <li><strong>8 CSV files</strong> (regional basins)</li>
+                            <li><strong>~49,000</strong> total samples</li>
+                            <li><strong>Target:</strong> Water Level (continuous)</li>
+                        </ul>
+                        <div style="margin-top: 2rem;">
+                            <h3>Features Used</h3>
+                            <ul>
+                                <li><code>year</code> - Extracted from date</li>
+                                <li><code>month</code> - Extracted from date</li>
+                                <li><code>gid</code> - Location identifier</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight-box">
+                        <h3>Preprocessing Pipeline</h3>
+                        <ol style="padding-left: 1.2rem;">
+                            <li><strong>Rename:</strong> Russian → English columns</li>
+                            <li><strong>Parse:</strong> Extract year/month from date</li>
+                            <li><strong>Clean:</strong> Remove invalid targets ('-')</li>
+                            <li><strong>Impute:</strong> Mean strategy for missing values</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">Slide 3 / 7</div>
+        </div>
+
+        <!-- Slide 4: Methodology -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Methodology & Hyperparameter Tuning</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Description</th>
+                            <th>Tuned Parameters</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Decision Tree</strong></td>
+                            <td>Non-parametric tree splits</td>
+                            <td>max_depth=20, min_samples_split=2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Random Forest</strong></td>
+                            <td>Ensemble of 150 trees</td>
+                            <td>max_depth=15, min_samples_split=5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>KNN</strong></td>
+                            <td>Distance-weighted neighbors</td>
+                            <td>k=7, metric=manhattan, weights=distance</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box">
+                    <h3>✨ Hybrid Stacking Architecture</h3>
+                    <p><strong>Base:</strong> Best model (tuned) → <strong>Meta:</strong> MLP (50×50 hidden units)</p>
+                </div>
+            </div>
+            <div class="footer">Slide 4 / 7</div>
+        </div>
+
+        <!-- Slide 5: Results Table -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Results: Table 1</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Train/Test</th>
+                            <th>RMSE ↓</th>
+                            <th>R² ↑</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Decision Tree</strong></td>
+                            <td>90/10</td>
+                            <td>32.49</td>
+                            <td>0.9703</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>50/50</td>
+                            <td>32.86</td>
+                            <td>0.9694</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Random Forest</strong></td>
+                            <td>90/10</td>
+                            <td>32.58</td>
+                            <td>0.9702</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>50/50</td>
+                            <td>32.90</td>
+                            <td>0.9693</td>
+                        </tr>
+                        <tr>
+                            <td><strong>KNN (tuned)</strong></td>
+                            <td>90/10</td>
+                            <td>33.73</td>
+                            <td>0.9680</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>50/50</td>
+                            <td>33.70</td>
+                            <td>0.9678</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Hybrid (DT+MLP)</strong></td>
+                            <td>90/10</td>
+                            <td>32.48</td>
+                            <td>0.9703</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td></td>
+                            <td>50/50</td>
+                            <td>32.87</td>
+                            <td>0.9694</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 0.95rem; color: #64748b; margin-top: 1rem;">
+                    *Full results in lab1_results.csv (5 iterations per algorithm)
+                </p>
+            </div>
+            <div class="footer">Slide 5 / 7</div>
+        </div>
+
+        <!-- Slide 6: Analysis -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Key Findings</h2>
+                <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="card">
+                        <h3>🌲 Tree-Based Superiority</h3>
+                        <p>Decision Tree and Random Forest achieve <strong>R² ≈ 0.97</strong>, outperforming KNN
+                            (0.968).</p>
+                    </div>
+                    <div class="card">
+                        <h3>⚙️ Tuning Impact</h3>
+                        <p>KNN improved from <strong>0.965 → 0.968</strong> after hyperparameter optimization.</p>
+                    </div>
+                    <div class="card">
+                        <h3>🔄 Hybrid Saturation</h3>
+                        <p>Hybrid model matches but doesn't exceed base model - maximum signal already extracted.</p>
+                    </div>
+                    <div class="card">
+                        <h3>📊 Stable Performance</h3>
+                        <p>Consistent R² across all train/test splits indicates robust generalization.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">Slide 6 / 7</div>
+        </div>
+
+        <!-- Slide 7: Conclusion -->
+        <div class="slide">
+            <div class="slide-content" style="text-align: center;">
+                <h2 style="border: none; padding: 0;">Conclusion</h2>
+
+                <div style="display: flex; justify-content: center; gap: 4rem; margin: 3rem 0;">
+                    <div>
+                        <div class="metric">0.97</div>
+                        <div class="metric-label">Best R² Score</div>
+                    </div>
+                    <div>
+                        <div class="metric">32.5</div>
+                        <div class="metric-label">Best RMSE</div>
+                    </div>
+                    <div>
+                        <div class="metric">3</div>
+                        <div class="metric-label">Features Used</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="text-align: left; max-width: 700px; margin: 2rem auto;">
+                    <h3>Recommendation</h3>
+                    <p style="font-size: 1.4rem;">
+                        Deploy <strong>Decision Tree</strong> or <strong>Random Forest</strong> with tuned parameters.
+                    </p>
+                    <p style="margin-top: 1rem; color: #64748b;">
+                        Both achieve optimal accuracy with minimal computational overhead.
+                    </p>
+                </div>
+
+                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+                    <p style="font-size: 1.5rem; color: var(--secondary);">Thank You</p>
+                    <p style="color: #64748b; margin-top: 0.5rem;">Questions?</p>
+                </div>
+            </div>
+            <div class="footer">Slide 7 / 7</div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 7;
+        const container = document.getElementById('slidesContainer');
+        const progress = document.getElementById('progress');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateSlide() {
+            container.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        function navigate(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlide();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                navigate(1);
+            } else if (e.key === 'ArrowLeft') {
+                navigate(-1);
+            } else if (e.key === 'Home') {
+                currentSlide = 0;
+                updateSlide();
+            } else if (e.key === 'End') {
+                currentSlide = totalSlides - 1;
+                updateSlide();
+            }
+        });
+
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+
+</html>
