@@ -497,12 +497,12 @@ All data processing, analysis, and visualization code is available in the projec
 - `src/visualization.py`
 - `src/models.py`
 
-Jupyter notebooks documenting the complete workflow:
-- `notebooks/01_data_collection.ipynb`
-- `notebooks/02_data_cleaning.ipynb`
-- `notebooks/03_eda.ipynb`
-- `notebooks/04_analysis.ipynb`
-
+**Reproducibility:**
+The entire analysis pipeline is automated using Python scripts:
+- `src/process_real_data.py`: Raw data parsing and merging
+- `src/preprocessing.py`: Data cleaning and interpolation
+- `src/analysis.py`: Statistical analysis (Mann-Kendall, Decomposition)
+- `src/visualization.py`: Generation of all figures
 ---
 
 **End of Report**
