@@ -358,8 +358,8 @@
 - International best practices (Beijing, London)
 
 ### Anticipated Questions:
-1. **Q:** Why use sample data instead of real data?
-   **A:** While historical data is limited, this analysis uses real monitoring data from 2021-2025 to reflect actual conditions.
+1. **Q:** Why are there gaps in the historical data?
+   **A:** Real-world sensor networks often have outages due to maintenance or power issues. We used **Linear Interpolation** to handle these gaps scientifically without biasing the results.
 
 2. **Q:** Are these recommendations affordable for Kazakhstan?
    **A:** Yes, phased approach; short-term actions are low-cost; long-term investments have strong ROI
