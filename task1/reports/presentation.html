@@ -267,6 +267,12 @@
                         <li><strong>Period:</strong> 2021 - 2025</li>
                         <li><strong>Valid Parameters:</strong> PM2.5, PM10, Temperature, Humidity</li>
                     </ul>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <img src="figures/aqicn_source.png" alt="AQICN Source"
+                            style="max-height: 150px; border: 1px solid #ddd;">
+                        <p style="font-size: 0.9rem; margin-top: 5px;"><a href="https://aqicn.org/station/@216661/"
+                                target="_blank" style="color: var(--secondary);">Source: AQICN Station 216661</a></p>
+                    </div>
                 </div>
                 <div class="stat-box">
                     <h3>Processing Pipeline</h3>
@@ -279,6 +285,38 @@
             </div>
             <p style="font-size: 1rem; color: #666; margin-top: 20px;">*Note: Gaseous pollutant data (NO2, SO2, CO) is
                 primarily available for the late 2024-2025 period.</p>
+        </div>
+
+        <!-- Slide 3b: Algorithmic Approach (AI/ML Context) -->
+        <div class="slide">
+            <h2>Algorithmic & Statistical Framework</h2>
+            <p>Applied AI methodologies used to derive insights from raw sensor data.</p>
+            <div class="grid-2">
+                <div class="stat-box">
+                    <h3>1. Time Series Decomposition</h3>
+                    <p><strong>Model:</strong> Additive ($Y_t = T_t + S_t + R_t$)</p>
+                    <p>Used to mathematically isolate the <strong>seasonal component</strong> (heating impact) from
+                        long-term trends and noise.</p>
+                </div>
+                <div class="stat-box">
+                    <h3>2. Mann-Kendall Trend Test</h3>
+                    <p><strong>Type:</strong> Non-parametric Hypothesis Test</p>
+                    <p>Robustly detects monotonic trends ($H_1$) in pollution levels over time, insensitive to outliers
+                        and missing data.</p>
+                </div>
+                <div class="stat-box">
+                    <h3>3. Linear Interpolation</h3>
+                    <p><strong>Constraint:</strong> <code>limit_direction='forward'</code></p>
+                    <p>Preserves local temporal structure while strictly preventing data leakage (backfilling) from
+                        future to past.</p>
+                </div>
+                <div class="stat-box">
+                    <h3>4. Correlation Analysis</h3>
+                    <p><strong>Metric:</strong> Pearson Coefficient ($r$)</p>
+                    <p>Quantifies the linear dependency between meteorological features (Temp, Wind) and Target (PM2.5).
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Slide 4: Key Findings - Overview -->
@@ -454,7 +492,7 @@
 
     <!-- <div class="controls">
         <button id="prevBtn" onclick="moveSlide(-1)">❮ Previous</button>
-        <span id="slideIndicator" style="margin: 0 10px; font-weight: bold;">1 / 12</span>
+        <span id="slideIndicator" style="margin: 0 10px; font-weight: bold;">1 / 13</span>
         <button id="nextBtn" onclick="moveSlide(1)">Next ❯</button>
     </div> -->
 

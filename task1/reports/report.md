@@ -94,6 +94,10 @@ This analysis utilized real monitoring data from two stations in Aktobe:
 
 **Data Period:** September 2021 – December 2025
 
+**Source Verification:**
+![AQICN Data Source](figures/aqicn_source.png)
+*Figure 1: Real-time monitoring data source from [AQICN Station 216661](https://aqicn.org/station/@216661/)*
+
 ### 3.2 Data Preprocessing
 
 The preprocessing pipeline included:
@@ -113,6 +117,27 @@ The preprocessing pipeline included:
 4. **Correlation Analysis:** Pearson correlation between pollutants and weather variables
 5. **WHO Standards Comparison:** Exceedance analysis for daily and annual limits
 6. **AQI Distribution:** Category-based health risk assessment
+
+### 3.4 Algorithmic & Statistical Framework
+This study employs a rigorous statistical approach suitable for Applied AI analysis:
+
+1.  **Time Series Decomposition (Additive Model):**
+    *   **Algorithm:** $Y(t) = T(t) + S(t) + R(t)$
+    *   **Purpose:** To isolate the seasonal component $S(t)$ (heating impact) from the long-term trend $T(t)$ and residual noise $R(t)$. This allows for quantifying the specific contribution of winter months to overall pollution.
+
+2.  **Mann-Kendall Trend Test:**
+    *   **Type:** Non-parametric statistical test.
+    *   **Hypothesis:** $H_0$: No monotonic trend exists. $H_1$: A monotonic trend exists.
+    *   **Application:** Used to mathematically verify if pollution levels are statistically increasing or decreasing over the 4-year period, robust against outliers.
+
+3.  **Linear Interpolation with Forward Limit:**
+    *   **Method:** $y = y_0 + (x - x_0) \frac{y_1 - y_0}{x_1 - x_0}$
+    *   **Constraint:** `limit_direction='forward'`
+    *   **Reasoning:** Chosen over mean imputation to preserve local time-series structure while preventing "backfilling" of historical gaps with future data, ensuring temporal causality.
+
+4.  **Pearson Correlation Coefficient:**
+    *   **Formula:** $r = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum(x_i - \bar{x})^2 \sum(y_i - \bar{y})^2}}$
+    *   **Application:** To quantify the linear relationship between meteorological variables (Temperature, Wind Speed) and pollutant concentrations (PM2.5).
 
 ---
 
