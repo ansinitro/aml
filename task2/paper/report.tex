@@ -1,0 +1,176 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{cite}
+
+\geometry{a4paper, margin=1in}
+
+\title{\textbf{Sentiment Analysis of Social Media Data (Sentiment140)}\\
+\large Advanced Machine Learning - Case Study Report}
+\author{Angsar Shaumen \\ Group: AAI-2501M}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This report presents a comparative analysis of machine learning models for sentiment analysis on the Sentiment140 dataset. We implement and evaluate Logistic Regression, Naive Bayes, Recurrent Neural Networks (LSTM), and a Lexicon-based approach (VADER). By employing rigorous data preprocessing, including negation preservation, and utilizing a dataset of 200,000 tweets, we demonstrate that Logistic Regression achieves the highest accuracy of 78.35\%, outperforming the deep learning baseline in early epochs and significantly surpassing the lexicon-based method.
+\end{abstract}
+
+\section{Introduction}
+Social media platforms generate vast amounts of unstructured text data, offering insights into public opinion. Sentiment analysis, the computational study of opinions, is crucial for understanding this data. This case study focuses on classifying the sentiment of tweets from the Sentiment140 dataset as either positive or negative. The objective is to evaluate different modeling approaches, ranging from traditional probabilistic models to deep learning and rule-based systems, and to analyze their performance and interpretability.
+
+\section{Literature Review}
+Sentiment analysis has evolved significantly from lexicon-based methods to advanced deep learning techniques. Go, Bhayani, and Huang (2009) introduced the Sentiment140 dataset, demonstrating that distant supervision (using emoticons as noisy labels) allows for training accurate classifiers without manual annotation \cite{go2009}. They achieved over 80\% accuracy using Maximum Entropy classifiers.
+
+Hutto and Gilbert (2014) proposed VADER (Valence Aware Dictionary and sEntiment Reasoner), a rule-based model specifically tuned for social media text \cite{hutto2014}. VADER is valued for its explicit interpretability and lack of training requirements, though it often struggles with the complex context found in modern tweets.
+
+More recently, deep learning architectures like Long Short-Term Memory (LSTM) networks, introduced by Hochreiter and Schmidhuber (1997), have become dominant \cite{hochreiter1997}. LSTMs effectively capture long-range dependencies in sequential data, addressing the vanishing gradient problem of standard RNNs.
+
+\section{Methods}
+
+\subsection{Dataset}
+We utilized the Sentiment140 dataset \cite{go2009}, specifically the \texttt{training.1600000.processed.noemoticon.csv} file. For this study, a stratified random sample of 200,000 tweets was selected to ensure computational feasibility while maintaining statistical significance. The dataset contains binary sentiment labels (0 = Negative, 4 = Positive).
+
+\subsection{Preprocessing}
+Effective preprocessing is vital for NLP tasks. Our pipeline included:
+\begin{itemize}
+    \item \textbf{Cleaning}: Removal of URLs, user handles (@user), and special characters.
+    \item \textbf{Lowercase Conversion}: Standardization of text case.
+    \item \textbf{Stopword Removal with Exception}: Standard English stopwords were removed, but critical negation words (e.g., ``not'', ``no'', ``nor'', ``never'') were explicitly preserved to maintain sentiment polarity (e.g., ``not good'' vs. ``good'').
+    \item \textbf{Lemmatization}: Reducing words to their base form using WordNetLemmatizer.
+\end{itemize}
+
+\subsection{Models}
+We implemented four distinct approaches:
+\begin{enumerate}
+    \item \textbf{Logistic Regression (Baseline)}: TF-IDF vectorization (max features=5000, n-grams=1-2) with GridSearch optimization for regularization parameters.
+    \item \textbf{Naive Bayes (MultinomialNB)}: A probabilistic classifier suitable for text data, using the same TF-IDF features.
+    \item \textbf{LSTM (Deep Learning)}: A Recurrent Neural Network with an Embedding layer, SpatialDropout1D, and LSTM units, designed to capture sequential dependencies \cite{hochreiter1997}.
+    \item \textbf{VADER (Lexicon-based)}: A rule-based model that sums the valence scores of words, used as a benchmark for training-free performance \cite{hutto2014}.
+\end{enumerate}
+
+\section{Results}
+
+\subsection{Exploratory Data Analysis}
+To gain initial insights into the dataset, we generated word clouds for both positive and negative tweets (Figure \ref{fig:wordclouds}). These visualizations highlight the most frequent terms associated with each sentiment polarity. Positive tweets frequently contain words like ``love'', ``good'', and ``day'', while negative tweets often feature ``work'', ``today'', and ``sad''.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/wordcloud_positive.png}
+        \caption{Positive Sentiment Word Cloud}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/wordcloud_negative.png}
+        \caption{Negative Sentiment Word Cloud}
+    \end{minipage}
+    \caption{Word Clouds illustrating frequent terms in the dataset.}
+    \label{fig:wordclouds}
+\end{figure}
+
+\subsection{Model Performance}
+Table \ref{tab:results} summarizes the performance metrics on the test set. Logistic Regression achieved the best overall performance with an accuracy of 78.35\% and an ROC-AUC of 0.865.
+
+\begin{table}[H]
+    \centering
+    \caption{Performance Comparison of Sentiment Analysis Models}
+    \label{tab:results}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Model} & \textbf{Accuracy} & \textbf{F1-Score} & \textbf{ROC-AUC} \\
+        \midrule
+        Logistic Regression & \textbf{78.35\%} & \textbf{0.787} & \textbf{0.865} \\
+        Naive Bayes & 77.12\% & 0.772 & 0.851 \\
+        LSTM (Epoch 1) & 78.04\% & - & - \\
+        VADER (Lexicon) & 64.81\% & - & - \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/model_comparison.png}
+    \caption{Comparison of Accuracy and F1-Score across all models.}
+    \label{fig:model_comparison}
+\end{figure}
+
+\subsection{Feature Importance}
+We analyzed the coefficients of the Logistic Regression model to understand the most influential words. Figure \ref{fig:feature_importance} displays the top words driving positive and negative sentiment. Words like ``love'', ``thanks'', and ``great'' strongly predict positive sentiment, while ``miss'', ``sad'', and ``sorry'' predict negative sentiment.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/feature_importance.png}
+    \caption{Top 20 Features Influencing Sentiment (Logistic Regression)}
+    \label{fig:feature_importance}
+\end{figure}
+
+\subsection{Confusion Matrices}
+We compared the confusion matrices of all three trained models. Logistic Regression (Figure \ref{fig:lr_cm}) and LSTM (Figure \ref{fig:lstm_cm}) show very similar error distributions, indicating that the linear model is surprisingly competitive for this specific feature set.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/lr_cm.png}
+        \caption{Logistic Regression}
+        \label{fig:lr_cm}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/nb_cm.png}
+        \caption{Naive Bayes}
+        \label{fig:nb_cm}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/lstm_confusion_matrix.png}
+        \caption{LSTM}
+        \label{fig:lstm_cm}
+    \end{minipage}
+\end{figure}
+
+\section{Discussion}
+\subsection{Interpretation of Results}
+The results highlight the effectiveness of supervised machine learning. Logistic Regression (78.35\%) remains the most efficient performer. The LSTM model (78.04\%) showed competitive performance even after just one epoch, suggesting deep learning has strong potential with more training. VADER's performance improved significantly to 64.81\% after strictly mapping scores to binary classes, though it still lags behind supervised methods due to its inability to capture context as effectively as trained models.
+
+\subsection{Error Analysis}
+An analysis of misclassified examples revealed common challenges:
+\begin{itemize}
+    \item \textbf{Contextual Ambiguity}: Tweets like ``miss cant wait see new phone'' contain both negative words (``miss'') and positive phrases (``cant wait''), confusing the model.
+    \item \textbf{Implicit Sentiment}: Some tweets express sentiment without using obvious polarized words, which TF-IDF models struggle to capture.
+\end{itemize}
+
+\section{Conclusion}
+This study successfully implemented a robust sentiment analysis pipeline. We demonstrated that careful preprocessing (preserving negations) and appropriate model selection are critical. Logistic Regression emerged as the optimal choice, offering the best balance of accuracy, speed, and interpretability. Future work could involve training the LSTM for more epochs on the full 1.6M dataset or employing Transformer-based models (BERT) to better capture context.
+
+\begin{thebibliography}{9}
+
+\bibitem{go2009}
+Go, A., Bhayani, R., and Huang, L. (2009).
+\textit{Twitter sentiment classification using distant supervision}.
+CS224N Project Report, Stanford, 1(12).
+
+\bibitem{hutto2014}
+Hutto, C. J., and Gilbert, E. (2014).
+\textit{VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text}.
+Eighth International AAAI Conference on Weblogs and Social Media.
+
+\bibitem{hochreiter1997}
+Hochreiter, S., and Schmidhuber, J. (1997).
+\textit{Long Short-Term Memory}.
+Neural Computation, 9(8), 1735–1780.
+
+\end{thebibliography}
+
+\end{document}

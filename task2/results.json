@@ -1,0 +1,25 @@
+[
+    {
+        "name": "Logistic Regression",
+        "accuracy": 0.7835,
+        "f1": 0.7873,
+        "roc_auc": 0.8648
+    },
+    {
+        "name": "Naive Bayes",
+        "accuracy": 0.7712,
+        "f1": 0.7719,
+        "roc_auc": 0.8510
+    },
+    {
+        "name": "VADER",
+        "accuracy": 0.6481,
+        "f1": 0.4578 
+    },
+    {
+        "name": "LSTM",
+        "accuracy": 0.7804,
+        "f1": null,
+        "roc_auc": null
+    }
+]
