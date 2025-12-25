@@ -1,0 +1,145 @@
+
+\documentclass[12pt, a4paper]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+\title{Laboratory Work 2: Time Series Models \\ \large ARIMA, SARIMA, ARIMAX, VARIMA}
+\author{Angsar Shaumen \\ Group: AAI-2501M}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This laboratory work explores the modeling and forecasting of time series using ARIMA, SARIMA, ARIMAX, and VAR models. We apply these techniques to both univariate (AirPassengers) and multivariate (Macrodata) datasets. The results demonstrate the superiority of SARIMA for seasonal data and the utility of VAR for analyzing interdependent macroeconomic variables.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Time series analysis is a critical component of modern data science, used in finance, economics, and resource planning. This lab focuses on:
+\begin{itemize}
+    \item \textbf{ARIMA}: AutoRegressive Integrated Moving Average for non-seasonal data.
+    \item \textbf{SARIMA}: Extensions for seasonality.
+    \item \textbf{ARIMAX}: Incorporating exogenous variables.
+    \item \textbf{VAR}: Vector Autoregression for multivariate systems.
+\end{itemize}
+
+\section{Methodology and Data}
+We utilized Python with the \texttt{statsmodels} library. Two primary datasets were used:
+\begin{enumerate}
+    \item \textbf{AirPassengers}: Monthly totals of international airline passengers (1949-1960). Used for ARIMA and SARIMA.
+    \item \textbf{US Macrodata}: Quarterly US macroeconomic data (1959-2009). Used for ARIMAX and VAR.
+\end{enumerate}
+
+Stationarity was tested using the Augmented Dickey-Fuller (ADF) test. Model performance was evaluated using RMSE (Root Mean Squared Error) and MAPE (Mean Absolute Percentage Error).
+
+\section{Results}
+
+\subsection{Part A: ARIMA (Univariate)}
+The original AirPassengers series was non-stationary (ADF $p > 0.05$). First-order differencing was applied, though the variance remained non-constant.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/part_a_1_series.png}
+    \caption{Original AirPassengers Series}
+\end{figure}
+
+We fitted an ARIMA(2,1,2) model.
+\begin{itemize}
+    \item \textbf{RMSE}: 82.51
+    \item \textbf{MAPE}: 14.22\%
+    \item \textbf{AIC}: 1057.51
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/part_a_5_forecast.png}
+    \caption{ARIMA Forecast}
+\end{figure}
+
+\subsection{Part B: SARIMA (Seasonal)}
+To address the clear annual seasonality, we fitted a SARIMA(1,1,1)(1,1,1,12) model on log-transformed data.
+\begin{itemize}
+    \item \textbf{RMSE}: 15.02
+    \item \textbf{MAPE}: 2.80\%
+    \item \textbf{AIC}: -368.06
+\end{itemize}
+The SARIMA model significantly outperformed the standard ARIMA model, capturing the seasonal peaks effectively.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/part_b_1_forecast.png}
+    \caption{SARIMA Forecast}
+\end{figure}
+
+\subsection{Part C: ARIMAX (Exogenous Regressors)}
+We modeled Real GDP Growth (\texttt{realgdp}) using Real Consumption (\texttt{realcons}) as an exogenous variable.
+\begin{itemize}
+    \item \textbf{Model}: ARIMAX(1,0,1)
+    \item \textbf{Exogenous Coef}: 1.185 ($P < 0.001$), indicating a strong positive relationship.
+    \item \textbf{MAPE}: 143.82\% (High variance in growth rates leads to high percentage errors).
+\end{itemize}
+
+\subsection{Part D and E: Multivariate (VAR and VARMAX)}
+We modeled the interaction between \texttt{realgdp}, \texttt{realcons}, and \texttt{realinv}. 
+\begin{itemize}
+    \item \textbf{VAR(1)}: Selected by AIC (-27.86). The lag order of 1 suggests immediate past values drive the current economic state.
+    \item \textbf{VARMAX(1,1)}: As an extension (Exercise 4), we added a Moving Average component. 
+    \begin{itemize}
+        \item \textbf{RMSE (GDP)}: 0.0091
+        \item While VARMAX offers theoretical flexibility, the computational cost and identification difficulties (many insignificant p-values) often make standard VAR preferred for macro data.
+    \end{itemize}
+\end{itemize}
+
+Granger causality tests (implied by the significant coefficients in the VAR summary) suggest strong interdependencies.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/part_d_1_forecast_gdp.png}
+    \caption{VAR Forecast for Real GDP}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/part_d_3_varmax_gdp.png}
+    \caption{VARMAX(1,1) Forecast for Real GDP}
+\end{figure}
+
+\section{Control Questions}
+\begin{enumerate}
+    \item \textbf{Role of d in ARIMA}: The parameter $d$ represents the degree of differencing required to make the time series stationary. Over-differencing increases the variance of the series and introduces unnecessary MA correlations.
+    \item \textbf{SARIMA Parameters}: $(P,D,Q,s)$ refer to the Seasonal AR, Seasonal Difference, Seasonal MA, and Seasonality period (e.g., 12 for months). They function similarly to non-seasonal parameters but operate on lag $s$.
+    \item \textbf{Exogenous Variables}: These are external inputs (X) that help predict the target (Y), but are not influenced by Y. For forecasting, future values of X must be known or forecastable.
+    \item \textbf{VAR vs VARMA}: VAR uses only lagged values of the variables themselves. VARMA adds Moving Average (error) terms. VECM is appropriate when variables are non-stationary but cointegrated.
+    \item \textbf{Diagnostics}: We check residuals for white noise (Ljung-Box test), normality (Jarque-Bera), and heteroskedasticity.
+    \item \textbf{Reverting Forecasts}: If differenced $d=1$, we calculate the cumulative sum of the forecast and add the last observed value ($Y_t = Y_{t-1} + \Delta Y_t$).
+\end{enumerate}
+
+\section{Conclusion}
+This lab demonstrated that accounting for seasonality (SARIMA) drastically improves forecasting for periodic data like air travel. For economic indicators, adding exogenous variables (ARIMAX) or modeling variables jointly (VAR) provides richer insights into structural relationships.
+
+\begin{thebibliography}{9}
+\bibitem{box1976}
+Box, G. E. P., \& Jenkins, G. M. (1976).
+\textit{Time Series Analysis: Forecasting and Control}. Holden-Day.
+
+\bibitem{lutkepohl2005}
+L\"utkepohl, H. (2005).
+\textit{New Introduction to Multiple Time Series Analysis}. Springer.
+
+\bibitem{statsmodels}
+Seabold, S., \& Perktold, J. (2010).
+statsmodels: Econometric and statistical modeling with python.
+\textit{Proceedings of the 9th Python in Science Conference}.
+\end{thebibliography}
+
+\end{document}
