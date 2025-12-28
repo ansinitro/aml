@@ -1,0 +1,45 @@
+{
+    "Armed Assault": {
+        "precision": 0.7864819944598338,
+        "recall": 0.8349605928714269,
+        "f1-score": 0.8099965765148922,
+        "support": 8501.0
+    },
+    "Assassination": {
+        "precision": 0.7532234957020058,
+        "recall": 0.5429899302865996,
+        "f1-score": 0.6310577644411103,
+        "support": 3873.0
+    },
+    "Bombing/Explosion": {
+        "precision": 0.9401155569955181,
+        "recall": 0.9859553743345792,
+        "f1-score": 0.9624899798214335,
+        "support": 17658.0
+    },
+    "Facility/Infrastructure Attack": {
+        "precision": 0.8436724565756824,
+        "recall": 0.8130081300813008,
+        "f1-score": 0.8280565026790063,
+        "support": 2091.0
+    },
+    "Hostage Taking (Kidnapping)": {
+        "precision": 0.7023511755877939,
+        "recall": 0.6304445442299057,
+        "f1-score": 0.6644581164221486,
+        "support": 2227.0
+    },
+    "accuracy": 0.8650655021834062,
+    "macro avg": {
+        "precision": 0.8051689358641669,
+        "recall": 0.7614717143607624,
+        "f1-score": 0.7792117879757181,
+        "support": 34350.0
+    },
+    "weighted avg": {
+        "precision": 0.8597360615405399,
+        "recall": 0.8650655021834062,
+        "f1-score": 0.8598756930042013,
+        "support": 34350.0
+    }
+}

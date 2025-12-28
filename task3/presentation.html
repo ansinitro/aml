@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Global Terrorism Analysis | Intel Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Black+Ops+One&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css">
+
+    <style>
+        :root {
+            --primary-color: #ff3333;
+            /* Alert Red */
+            --accent-color: #00ff41;
+            /* Terminal Green */
+            --bg-dark: #0a0a0a;
+            --text-main: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .reveal {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--text-main);
+            font-size: 24px;
+        }
+
+        /* Headers */
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4 {
+            font-family: 'Black Ops One', cursive;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        /* Slide Background - Grid Pattern */
+        .reveal .slides section {
+            background:
+                linear-gradient(rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.9)),
+                repeating-linear-gradient(0deg, transparent, transparent 19px, #1a1a1a 20px),
+                repeating-linear-gradient(90deg, transparent, transparent 19px, #1a1a1a 20px);
+            background-size: 100% 100%;
+        }
+
+        /* Borders & Framing */
+        .slide-frame {
+            border: 1px solid #333;
+            padding: 10px;
+            position: relative;
+            height: 95%;
+        }
+
+        .slide-frame::before {
+            content: "TOP SECRET // NOFORN";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: var(--bg-dark);
+            padding: 0 10px;
+            color: #555;
+            font-size: 0.5em;
+            font-family: 'Share Tech Mono';
+        }
+
+        .slide-frame::after {
+            content: "ANALYSIS ID: 377-B04";
+            position: absolute;
+            bottom: -10px;
+            right: 10px;
+            background: var(--bg-dark);
+            padding: 0 10px;
+            color: #555;
+            font-size: 0.5em;
+        }
+
+        /* Images */
+        img {
+            border: 2px solid var(--primary-color) !important;
+            filter: grayscale(20%) contrast(1.2);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3) !important;
+            background: #000;
+            max-height: 65vh !important;
+            max-width: 100%;
+        }
+
+        /* Lists */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li::before {
+            content: ">> ";
+            color: var(--primary-color);
+        }
+
+        /* Highlights */
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+
+        /* Table */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #444;
+        }
+
+        th {
+            background: #222;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        td {
+            border-bottom: 1px solid #333;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .col {
+            flex: 1;
+            text-align: left;
+        }
+
+        .container {
+            height: 80%;
+        }
+
+        .col.text {
+            flex: 0.6;
+            font-size: 0.9em;
+        }
+
+        .col.media {
+            flex: 1.4;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+            <section>
+                <div class="slide-frame">
+                    <h2>GLOBAL THREAT ANALYSIS</h2>
+                    <h4 style="color: #fff; font-size: 1em;">Operation: Pattern Recognition</h4>
+                    <hr style="border-color: var(--primary-color);">
+                    <p style="font-size: 0.8em; color: #888;">Clearance Level: 5</p>
+                    <p>STATUS: <span class="highlight blinking">COMPLETED</span></p>
+                    <br>
+                    <small>Target: GTD Dataset [1970-2017]</small>
+                </div>
+            </section>
+
+            <!-- Objective -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Mission Objective</h3>
+                    <div class="container">
+                        <div class="col">
+                            <ul>
+                                <li><b>TARGET</b>: Global Terrorism Database (GTD)</li>
+                                <li><b>INTEL</b>: 180,000+ Recorded Incidents</li>
+                                <li><b>OBJECTIVE</b>: Develop Predictive Models to Classify Attack Vectors.</li>
+                                <li><b>PROTOCOL</b>: 5-Fold Cross-Validation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Temporal Intel -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Timeline Analysis</h3>
+                    <img src="figures/attacks_per_year.png" alt="Attacks Per Year" style="max-height: 450px;">
+                    <p style="font-size: 0.6em;">Historical trend line indicating surge in hostile activity post-2010.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Methodology -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Tactical Approach</h3>
+                    <p>Algorithm Selection Protocol</p>
+                    <br>
+                    <div style="display: flex; justify-content: space-around;">
+                        <div style="border: 1px solid #555; padding: 20px; width: 25%;">
+                            <h5 style="color: #888;">UNIT 1</h5>
+                            Log. Regression
+                            <br><small>Linear Baseline</small>
+                        </div>
+                        <div style="border: 1px solid #555; padding: 20px; width: 25%;">
+                            <h5 style="color: #888;">UNIT 2</h5>
+                            Random Forest
+                            <br><small>Ensemble Bagging</small>
+                        </div>
+                        <div
+                            style="border: 1px solid var(--accent-color); padding: 20px; width: 25%; box-shadow: 0 0 10px rgba(0,255,0,0.2);">
+                            <h5 style="color: var(--accent-color);">UNIT 3</h5>
+                            Gradient Boosting
+                            <br><small class="highlight">SELECTED</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visual Intel: Regions -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Geospatial Intel</h3>
+                    <img src="figures/attacks_by_region.png" alt="Region Map" style="height: 500px;">
+                    <p class="fragment fade-in" style="font-size: 0.6em; color: var(--primary-color);">ALERT: High
+                        activity detected in MENA & South Asia sectors.</p>
+                </div>
+            </section>
+
+            <!-- Global Attack Vectors -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Global Vector Analysis</h3>
+                    <div class="container">
+                        <div class="col media">
+                            <img src="figures/attack_types_dist.png" alt="Attack Types" style="max-height: 450px;">
+                        </div>
+                        <div class="col text">
+                            <p>Distribution of hostile event types globally.</p>
+                            <ul>
+                                <li>Dominant Vector: Bombings/Explosions</li>
+                                <li>Secondary: Armed Assault</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Model Comparison -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Performance Report</h3>
+                    <div class="container">
+                        <div class="col" style="font-size: 0.8em;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Algorithm</th>
+                                        <th>Accuracy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>LogReg</td>
+                                        <td>82.6%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Random Forest</td>
+                                        <td>85.9%</td>
+                                    </tr>
+                                    <tr style="box-shadow: inset 0 0 10px rgba(0,255,0,0.1);">
+                                        <td><span class="highlight">HG Boosting</span></td>
+                                        <td><span class="highlight">86.5%</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col">
+                            <img src="figures/model_comparison.png" alt="Chart">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Intel Brief: High Value Targets -->
+            <section>
+                <div class="slide-frame">
+                    <h3>High-Risk Zones</h3>
+                    <div class="container">
+                        <div class="col">
+                            <ul>
+                                <li><b>PRIMARY FLASHPOINT</b>: <span class="highlight">IRAQ</span> executes 13.56%
+                                    of global incidents.</li>
+                                <li><b>SECTOR ANALYSIS</b>: 27.78% of all hostile activity occurs in MENA (Middle
+                                    East & N. Africa).</li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <img src="figures/top_countries_dark.png" alt="Top Countries">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Intel Brief: Tactical Breakdown -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Tactical Breakdown: IRAQ</h3>
+                    <div class="container">
+                        <div class="col media">
+                            <img src="figures/country_attack_breakdown.png" alt="Iraq Tactics"
+                                style="max-height: 400px;">
+                        </div>
+                        <div class="col text">
+                            <p style="font-size: 0.7em;">
+                                Hostile actors in this sector heavily favor <span
+                                    class="highlight">Explosives/Bombings</span> due to urban density.
+                            </p>
+                            <br>
+                            <p
+                                style="border: 1px solid var(--primary-color); padding: 10px; color: var(--primary-color); font-size: 0.6em;">
+                                STRATEGY ADVISORY: Counter-IED protocols are paramount in this theater.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Stability -->
+            <section>
+                <div class="slide-frame">
+                    <h3>System Integrity</h3>
+                    <div class="container">
+                        <div class="col text">
+                            <p>Learning Curve Diagnostics</p>
+                            <ul>
+                                <li>Training Score: High (Low Bias)</li>
+                                <li>Validation Score: Converging (Low Variance)</li>
+                                <li>STATUS: <span class="highlight">STABLE</span></li>
+                            </ul>
+                        </div>
+                        <div class="col media">
+                            <img src="figures/learning_curve.png" alt="Learning Curve">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Metrics -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Class-Level Diagnostics</h3>
+                    <img src="figures/class_report_heatmap.png" alt="Heatmap" style="max-height: 450px;">
+                    <p style="font-size: 0.5em;">Green = High Confidence // Red = Low Confidence</p>
+                </div>
+            </section>
+
+            <!-- Feature Analysis -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Predictive Indicators</h3>
+                    <div class="container">
+                        <div class="col">
+                            <ul>
+                                <li><b>PRIMARY INDICATOR</b>: <span class="highlight">WEAPON TYPE</span></li>
+                                <li>SECONDARY: Operation Zone (Region)</li>
+                                <li>TERTIARY: Success Status</li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <img src="figures/feature_importance.png" alt="Features">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ethics -->
+            <section>
+                <div class="slide-frame">
+                    <h3 style="color: #fce883;">Ethical Protocols</h3> <!-- Warning Yellow -->
+                    <ul>
+                        <li><span style="color: #fce883;">[WARNING]</span> <b>Data Bias</b>: Reporting gaps in remote
+                            sectors.</li>
+                        <li><span style="color: #fce883;">[RESTRICTED]</span> <b>Dual Use</b>: Non-operational
+                            deployment only.</li>
+                        <li><span style="color: #fce883;">[SECURE]</span> <b>Privacy</b>: No individual profiling.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section>
+                <div class="slide-frame">
+                    <h3>Mission Debrief</h3>
+                    <ul>
+                        <li><span class="highlight">SUCCESS</span>: Model Accuracy > 86%.</li>
+                        <li><span class="highlight">READY</span>: Artifacts Archived for Deployment.</li>
+                    </ul>
+                    <br><br>
+                    <h4 class="highlight" style="font-size: 1.5em; animation: blink 1s infinite;">END TRANSMISSION</h4>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'none', /* Instant transition for 'terminal' feel */
+            backgroundTransition: 'none'
+        });
+    </script>
+    <style>
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .blinking {
+            animation: blink 1s infinite;
+        }
+    </style>
+</body>
+
+</html>
