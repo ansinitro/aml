@@ -1,2 +1,5 @@
 **/venv/
 **/.venv/
+**/gtd_dataset.csv
+**/__pycache__/
+temp/
