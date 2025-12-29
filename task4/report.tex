@@ -1,0 +1,103 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\geometry{margin=1in}
+
+\title{Comparative Analysis of Traditional Machine Learning and Deep Learning for Pneumonia Detection in Medical Imaging}
+\author{Angsar Shaumen}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper presents a comparative study of machine learning approaches for the classification of pneumonia from chest X-ray images using the PneumoniaMNIST dataset. We evaluate two distinct methodologies: a traditional machine learning pipeline utilizing Principal Component Analysis (PCA) for dimensionality reduction followed by Support Vector Machine (SVM) classification, and a deep learning approach employing a Convolutional Neural Network (CNN). Our study incorporates rigorous Exploratory Data Analysis (EDA), including unsupervised clustering (K-Means) and visualization techniques (t-SNE), to understand the intrinsic structure of the data. Results demonstrate that traditional methods provide a robust baseline (86.06\% accuracy), outperforming the lightweight CNN (82.69\% accuracy) on this specific low-resolution benchmark.
+\end{abstract}
+
+\section{Introduction}
+Medical image classification is a critical task in computer-aided diagnosis (CAD), enabling rapid and accurate detection of diseases. Pneumonia, an infection that inflames the air sacs in one or both lungs, remains a leading cause of death globally. Automated detection from chest X-rays can support radiologists by prioritizing urgent cases.
+The objective of this project is to develop and evaluate automated classification models for distinguishing between normal and pneumonia-infected chest X-rays. We align our methodology with key machine learning concepts, including dimensionality reduction, clustering, and supervised learning.
+
+\section{Dataset Description}
+We utilize the \textbf{PneumoniaMNIST} dataset, a standardized subset of the Kermany et al. Chest X-Ray images.
+\begin{itemize}
+    \item \textbf{Modality}: Chest X-Ray (Grayscale)
+    \item \textbf{Resolution}: 28x28 pixels
+    \item \textbf{Classes}: Binary [0: Normal, 1: Pneumonia]
+    \item \textbf{Split}: Train (4,708), Val (524), Test (624)
+\end{itemize}
+
+\section{Methodology}
+
+\subsection{Exploratory Data Analysis (EDA)}
+We applied dimensionality reduction techniques to visualize the high-dimensional (784 features) image data in 2D space.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{results/pca_visualization.png}
+        \caption{PCA Visualization}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{results/tsne_visualization.png}
+        \caption{t-SNE Visualization}
+    \end{subfigure}
+    \caption{Dimensionality reduction reveals distinct but overlapping regions for Normal vs Pneumonia classes.}
+\end{figure}
+
+\subsection{Model 1: Traditional ML (PCA + SVM)}
+We implemented a pipeline demonstrating Week 4 concepts:
+\begin{enumerate}
+    \item \textbf{Feature Extraction}: PCA retaining 95\% variance (reduced to 71 components).
+    \item \textbf{Classification}: Support Vector Machine (SVM) with RBF kernel.
+\end{enumerate}
+
+\subsection{Model 2: Deep Learning (CNN)}
+We designed a custom CNN with 3 Convolutional blocks (Conv2D $\rightarrow$ BatchNorm $\rightarrow$ ReLU $\rightarrow$ MaxPool) and 2 Fully Connected layers, trained with CrossEntropyLoss and Adam Optimizer.
+
+\section{Evaluation and Results}
+
+\subsection{Performance Metrics}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Model} & \textbf{Accuracy} & \textbf{F1-Score} & \textbf{Precision (N/P)} & \textbf{Recall (N/P)} \\
+        \midrule
+        \textbf{PCA + SVM} & \textbf{86.06\%} & \textbf{0.85} & 0.99 / 0.82 & 0.64 / 0.99 \\
+        \textbf{CNN} & 82.69\% & 0.81 & 0.98 / 0.79 & 0.55 / 0.99 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Comparative Classification Performance. (N=Normal, P=Pneumonia)}
+\end{table}
+
+\subsection{Analysis}
+The \textbf{SVM} model outperformed the CNN. The high Recall (0.99) for Pneumonia in both models indicates they are excellent at creating "safety nets" (detecting almost all sick patients). However, the CNN struggled more with false positives (lower precision for Pneumonia/high recall).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{results/cnn_confusion_matrix.png}
+    \caption{Confusion Matrix for CNN Model}
+\end{figure}
+
+\section{Conclusion}
+We successfully implemented a comparative pipeline. The study validated that \textbf{Dimensionality Reduction} combined with \textbf{SVM} is a highly effective strategy for 28x28 medical images, effectively capturing the global variance associated with lung opacity. Future work involves testing on high-resolution data where CNNs typically excel.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+\bibitem{medmnist}
+J. Yang \textit{et al.}, "MedMNIST v2: A Large-Scale Lightweight Benchmark for 2D and 3D Biomedical Image Classification," \textit{Scientific Data}, 2023.
+\bibitem{kermany}
+D. S. Kermany \textit{et al.}, "Identifying medical diagnoses and treatable diseases by image-based deep learning," \textit{Cell}, vol. 172, no. 5, pp. 1122-1131, 2018.
+\end{thebibliography}
+
+\end{document}
