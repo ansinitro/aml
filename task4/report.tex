@@ -38,7 +38,7 @@ We utilize the \textbf{PneumoniaMNIST} dataset, a standardized subset of the Ker
 
 \subsection{Exploratory Data Analysis (EDA)}
 We applied dimensionality reduction techniques to visualize the high-dimensional (784 features) image data in 2D space.
-\begin{figure}[H]
+\begin{figure}[h!]
     \centering
     \begin{subfigure}{0.48\textwidth}
         \centering
@@ -67,7 +67,7 @@ We designed a custom CNN with 3 Convolutional blocks (Conv2D $\rightarrow$ Batch
 \section{Evaluation and Results}
 
 \subsection{Performance Metrics}
-\begin{table}[H]
+\begin{table}[h!]
     \centering
     \begin{tabular}{lcccc}
         \toprule
@@ -83,7 +83,7 @@ We designed a custom CNN with 3 Convolutional blocks (Conv2D $\rightarrow$ Batch
 \subsection{Analysis}
 The \textbf{SVM} model outperformed the CNN. The high Recall (0.99) for Pneumonia in both models indicates they are excellent at creating "safety nets" (detecting almost all sick patients). However, the CNN struggled more with false positives (lower precision for Pneumonia/high recall).
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.6\linewidth]{results/cnn_confusion_matrix.png}
     \caption{Confusion Matrix for CNN Model}

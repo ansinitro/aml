@@ -5,18 +5,8 @@
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{float}
-\usepackage{cite}
-\usepackage{titlesec}
-\usepackage{fancyhdr}
 
-% Formatting
-\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
-\pagestyle{fancy}
-\setlength{\headheight}{14.5pt}
-\fancyhf{}
-\rhead{Terrorism Analysis with ML}
-\lhead{Data Science Team}
-\cfoot{\thepage}
+
 
 \title{\textbf{Predictive Analysis of Global Terrorism Patterns:\\A Comparative Machine Learning Approach}}
 \author{
@@ -81,7 +71,7 @@ We employed a 5-Fold Cross-Validation scheme to evaluate:
 \subsection{Model Comparison}
 Table \ref{tab:results} summarizes the cross-validation performance. Gradient Boosting emerged as the most effective model, likely due to its ability to capture complex non-linear interactions between region and attack tactics.
 
-\begin{table}[H]
+\begin{table}[h!]
     \centering
     \begin{tabular}{lcc}
         \toprule
@@ -96,7 +86,7 @@ Table \ref{tab:results} summarizes the cross-validation performance. Gradient Bo
     \label{tab:results}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/model_comparison.png}
     \caption{Comparative Accuracy of ML Models.}

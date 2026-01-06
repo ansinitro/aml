@@ -5,7 +5,7 @@
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{caption}
-\usepackage{cite}
+
 
 \geometry{a4paper, margin=1in}
 
@@ -60,7 +60,7 @@ We implemented four distinct approaches:
 \subsection{Exploratory Data Analysis}
 To gain initial insights into the dataset, we generated word clouds for both positive and negative tweets (Figure \ref{fig:wordclouds}). These visualizations highlight the most frequent terms associated with each sentiment polarity. Positive tweets frequently contain words like ``love'', ``good'', and ``day'', while negative tweets often feature ``work'', ``today'', and ``sad''.
 
-\begin{figure}[H]
+\begin{figure}[h!]
     \centering
     \begin{minipage}{0.48\textwidth}
         \centering
@@ -80,7 +80,7 @@ To gain initial insights into the dataset, we generated word clouds for both pos
 \subsection{Model Performance}
 Table \ref{tab:results} summarizes the performance metrics on the test set. Logistic Regression achieved the best overall performance with an accuracy of 78.35\% and an ROC-AUC of 0.865.
 
-\begin{table}[H]
+\begin{table}[h!]
     \centering
     \caption{Performance Comparison of Sentiment Analysis Models}
     \label{tab:results}
