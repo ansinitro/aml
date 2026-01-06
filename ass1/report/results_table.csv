@@ -1,0 +1,12 @@
+Algorithm,Number of features,Number of targets,k-fold validation,RMSE,R2
+Ridge,4,1,10,32503393.16,0.6159
+Lasso,4,1,10,32512974.73,0.6154
+Elastic Net,4,1,10,35182327.42,0.4632
+KNN Regression,4,1,10,32514765.08,0.6087
+Extra Trees Regression,4,1,10,33727654.18,0.5307
+Adaptive Boosting,4,1,10,35216515.5,0.4475
+Gradient Boosting,4,1,10,32764584.9,0.5863
+HistGradientBoosting,4,1,10,33190623.23,0.5748
+XGBoost,4,1,10,32702647.68,0.5914
+LightGBM,4,1,10,33119369.94,0.579
+CatBoost,4,1,10,32783519.81,0.5872
