@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Report - Sentiment140</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=calibri:wght@300;400;600;800&family=Inter:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Light Theme Palette */
+            --bg-color: #F8FAFC;
+            --text-color: #1E293B;
+            --heading-color: #0F172A;
+            --accent-primary: #2563EB;
+            /* Royal Blue */
+            --accent-secondary: #4F46E5;
+            /* Indigo */
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(226, 232, 240, 0.6);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.05) 0px, transparent 50%);
+        }
+
+        .slides-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 4rem;
+            /* Reduced padding for more space */
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            background: transparent;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            visibility: visible;
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--heading-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.25rem;
+            margin-bottom: 2rem;
+            color: var(--accent-primary);
+            font-weight: 700;
+            border-bottom: 3px solid var(--accent-secondary);
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+
+        p,
+        li {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--accent-primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .content-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem 4rem;
+            box-shadow: var(--shadow);
+            max-width: 1300px;
+            width: 90%;
+            max-height: 90vh;
+            /* Ensure it fits */
+            overflow-y: auto;
+            /* Scroll if content overflows */
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .content-box.column-layout {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .half-width {
+            flex: 1;
+            text-align: left;
+        }
+
+        .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 50vh;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        th {
+            background-color: #F1F5F9;
+            color: var(--accent-primary);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        td {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 2rem;
+            right: 3rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .btn {
+            background: white;
+            border: 1px solid #E2E8F0;
+            color: var(--text-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .fullscreen-btn {
+            position: absolute;
+            top: 2rem;
+            right: 3rem;
+            z-index: 101;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--accent-primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .highlight {
+            color: var(--accent-secondary);
+            font-weight: 700;
+        }
+
+        /* Code block style */
+        .code-block {
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: #1E293B;
+            /* Dark background for code even in light theme */
+            color: #E2E8F0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="btn fullscreen-btn" onclick="toggleFullScreen()">⛶ Full Screen</button>
+
+    <div class="slides-container">
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="content-box column-layout">
+                <p
+                    style="text-transform: uppercase; letter-spacing: 3px; color: var(--accent-secondary); font-weight: 600; margin-bottom: 0;">
+                    Case Study Report</p>
+                <h1>Sentiment Analysis<br>of Social Media Data</h1>
+                <p style="font-size: 1.5rem; max-width: 700px; margin: 1rem auto; color: #64748B;">A rigorous
+                    comparative analysis of Machine Learning models on the Sentiment140 dataset.</p>
+                <div style="margin-top: 1rem; color: var(--accent-secondary); font-size: 1.1rem;">
+                    <strong>By:</strong> Angsar Shaumen <br>
+                    <strong>Group:</strong> AAI-2501M
+                </div>
+                <div style="margin-top: 2rem;">
+                    <div
+                        style="display: inline-block; padding: 0.5rem 1rem; background: #DBEAFE; color: #1E40AF; border-radius: 50px; font-weight: 600;">
+                        Advanced Machine Learning</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introduction -->
+        <div class="slide">
+            <div class="content-box">
+                <div class="half-width">
+                    <h2>Introduction</h2>
+                    <p>Sentiment analysis automates the understanding of public opinion from vast social media streams.
+                    </p>
+                    <ul>
+                        <li><strong>Objective:</strong> Binary Classification (Positive/Negative) of tweets.</li>
+                        <li><strong>Dataset:</strong> <span class="highlight">Sentiment140</span>. <br> <small
+                                style="color: #64748B;">Sample Size: 200,000 tweets (Balanced Class
+                                Distribution)</small></li>
+                        <li><strong>Challenge:</strong> High noise (slang, sarcasm, lack of structure).</li>
+                    </ul>
+                </div>
+                <div class="image-container">
+                    <img src="figures/sentiment_distribution.png" alt="Sentiment Distribution">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Optimized Preprocessing -->
+        <div class="slide">
+            <div class="content-box">
+                <div class="half-width">
+                    <h2>Optimized Preprocessing</h2>
+                    <p>Standard text cleaning often destroys sentiment signals. Our pipeline specifically addresses
+                        this.</p>
+                    <ul>
+                        <li><strong>Noise Removal:</strong> Cleaned URLs, @handles, and special characters.</li>
+                        <li><strong>Negation Handling:</strong> <span class="highlight">Crucially preserved</span>
+                            "not", "no", "never". </li>
+                        <li><strong>Normalization:</strong> Lemmatization to base word forms.</li>
+                    </ul>
+                </div>
+                <!-- Code Visual -->
+                <div class="half-width code-block">
+                    <div
+                        style="margin-bottom: 1rem; border-bottom: 1px solid #334155; padding-bottom: 0.5rem; color: #94A3B8;">
+                        Preprocessing Comparison</div>
+                    <span style="color: #F87171;">INPUT:</span> "I do not like this!"<br><br>
+                    <span style="color: #94A3B8;"># Standard Removal</span><br>
+                    <span style="color: #FBBF24;">OUTPUT:</span> "like" <span
+                        style="font-style: italic; color: #64748B;">(Meaning Inverted)</span><br><br>
+                    <span style="color: #94A3B8;"># Our Approach</span><br>
+                    <span style="color: #4ADE80;">OUTPUT:</span> "not like" <span
+                        style="font-style: italic; color: #64748B;">(Meaning Preserved)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Methodology Table -->
+        <div class="slide">
+            <div class="content-box column-layout" style="align-items: flex-start; text-align: left;">
+                <h2>Methods Overview</h2>
+                <div style="width: 100%;">
+                    <p style="margin-bottom: 2rem;">We evaluated four distinct modeling paradigms:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Type</th>
+                                <th>Implementation Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Logistic Regression</strong></td>
+                                <td>Basline (Linear)</td>
+                                <td>TF-IDF (5000 feats), GridSearch (C=1.0, L2 penalty)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Naive Bayes</strong></td>
+                                <td>Probabilistic</td>
+                                <td>MultinomialNB with TF-IDF vectors</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LSTM</strong></td>
+                                <td>Deep Learning</td>
+                                <td>Embedding(128) -> SpatialDropout -> LSTM(196)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VADER</strong></td>
+                                <td>Lexicon</td>
+                                <td>Rule-based sentiment scoring (Unsupervised)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: EDA Word Clouds -->
+        <div class="slide">
+            <div class="content-box column-layout">
+                <h2>Exploratory Analysis</h2>
+                <p>Visualizing the most discriminative terms for each sentiment class.</p>
+                <div style="display: flex; gap: 3rem; justify-content: center; width: 100%; margin-top: 1rem;">
+                    <div style="flex: 1; text-align: center;">
+                        <div
+                            style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px rgba(74, 222, 128, 0.1);">
+                            <img src="figures/wordcloud_positive.png" alt="Positive Word Cloud"
+                                style="max-height: 400px;">
+                        </div>
+                        <p style="color: #15803d; font-weight: 700; margin-top: 1rem;">Positive Sentiment</p>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <div
+                            style="background: white; padding: 1rem; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 4px 6px rgba(248, 113, 113, 0.1);">
+                            <img src="figures/wordcloud_negative.png" alt="Negative Word Cloud"
+                                style="max-height: 400px;">
+                        </div>
+                        <p style="color: #b91c1c; font-weight: 700; margin-top: 1rem;">Negative Sentiment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Quantitative Results -->
+        <div class="slide">
+            <div class="content-box">
+                <div class="half-width">
+                    <h2>Performance Metrics</h2>
+                    <p>Logistic Regression achieved the highest accuracy, offering the best balance of performance and
+                        efficiency.</p>
+                    <table style="margin-top: 2rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Accuracy</th>
+                                <th>ROC-AUC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background-color: #EFF6FF; border-left: 4px solid var(--accent-primary);">
+                                <td><strong>Logistic Regression</strong></td>
+                                <td><strong>78.35%</strong></td>
+                                <td><strong>0.865</strong></td>
+                            </tr>
+                            <tr>
+                                <td>LSTM (Epoch 1)</td>
+                                <td>78.04%</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Naive Bayes</td>
+                                <td>77.12%</td>
+                                <td>0.851</td>
+                            </tr>
+                            <tr>
+                                <td>VADER</td>
+                                <td>64.81%</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="image-container">
+                    <img src="figures/lr_cm.png" alt="Confusion Matrix">
+                    <p style="text-align: center; margin-top: 0.5rem; font-size: 0.9rem; color: #64748B;">Logistic
+                        Regression Confusion Matrix</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide: Visual Model Comparison -->
+        <div class="slide">
+            <div class="content-box">
+                <div class="half-width">
+                    <h2>Visual Comparison</h2>
+                    <p>A side-by-side comparison of model performance metrics.</p>
+                    <ul>
+                        <li><strong>Logistic Regression</strong> leads in both Accuracy and F1-Score.</li>
+                        <li><strong>LSTM</strong> shows strong potential despite limited training epochs.</li>
+                        <li><strong>VADER</strong> lags significantly behind supervised methods.</li>
+                    </ul>
+                </div>
+                <div class="image-container" style="flex: 1.5;">
+                    <img src="figures/model_comparison.png" alt="Model Comparison Plot">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Feature Importance -->
+        <div class="slide">
+            <div class="content-box">
+                <div class="half-width">
+                    <h2>Feature Importance</h2>
+                    <p>Analysing model coefficients reveals the semantic drivers of sentiment.</p>
+                    <ul style="margin-top: 1.5rem;">
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong style="color: #15803d;">Positive Indicators:</strong><br>
+                            "thanks", "love", "good", "welcome"
+                        </li>
+                        <li>
+                            <strong style="color: #b91c1c;">Negative Indicators:</strong><br>
+                            "sad", "miss", "sorry", "sick", "bad"
+                        </li>
+                    </ul>
+                </div>
+                <div class="image-container" style="flex: 1.5;">
+                    <img src="figures/feature_importance.png" alt="Feature Importance Plot">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 3-Way Model Comparison -->
+        <div class="slide">
+            <div class="content-box column-layout">
+                <h2>Error Analysis Comparison</h2>
+                <p>Comparing confusion matrices to identify systematic errors across model types.</p>
+                <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; width: 100%;">
+                    <div style="flex: 1;">
+                        <div style="background: white; padding: 0.5rem; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <img src="figures/lr_cm.png" alt="LR CM" style="width: 100%;">
+                        </div>
+                        <p style="font-weight: 600; font-size: 0.9rem; margin-top: 0.8rem;">Logistic Regression</p>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="background: white; padding: 0.5rem; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <img src="figures/nb_cm.png" alt="NB CM" style="width: 100%;">
+                        </div>
+                        <p style="font-weight: 600; font-size: 0.9rem; margin-top: 0.8rem;">Naive Bayes</p>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="background: white; padding: 0.5rem; border-radius: 8px; border: 1px solid #E2E8F0;">
+                            <img src="figures/lstm_confusion_matrix.png" alt="LSTM CM" style="width: 100%;">
+                        </div>
+                        <p style="font-weight: 600; font-size: 0.9rem; margin-top: 0.8rem;">LSTM (Deep Learning)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Conclusion -->
+        <div class="slide">
+            <div class="content-box column-layout">
+                <h2>Conclusion</h2>
+                <p style="font-size: 1.4rem; max-width: 800px; color: #334155;">
+                    We successfully engineered a sentiment analysis pipeline achieving <strong>78.35% accuracy</strong>,
+                    matching state-of-the-art baselines for this dataset.
+                </p>
+                <div
+                    style="text-align: left; margin-top: 3rem; background: white; padding: 2rem; border-radius: 16px; border: 1px solid #E2E8F0; width: 80%;">
+                    <ul>
+                        <li><strong>Key Insight:</strong> Simple linear models (Logistic Regression) with TF-IDF often
+                            rival complex Deep Learning models on noisy, moderate-sized text datasets.</li>
+                        <li><strong>Critical Step:</strong> Negation retention was the single most important
+                            preprocessing decision.</li>
+                        <li><strong>Recommendation:</strong> Deep Learning (LSTM/BERT) is recommended only if the
+                            dataset scales >1M samples where context modeling becomes more beneficial than simple word
+                            co-occurrence.</li>
+                    </ul>
+                </div>
+                <h3 style="margin-top: 2rem; color: var(--accent-primary); font-family: 'Space Grotesk', sans-serif;">
+                    Thank You</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="prevSlide()">Previous</button>
+        <button class="btn" onclick="nextSlide()">Next</button>
+    </div>
+
+    <div class="progress-bar" id="progress"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progress');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+
+</html>

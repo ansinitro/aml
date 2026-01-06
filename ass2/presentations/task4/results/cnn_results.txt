@@ -1,0 +1,9 @@
+CNN Accuracy: 0.8269
+              precision    recall  f1-score   support
+
+           0       0.98      0.55      0.70       234
+           1       0.79      0.99      0.88       390
+
+    accuracy                           0.83       624
+   macro avg       0.89      0.77      0.79       624
+weighted avg       0.86      0.83      0.81       624

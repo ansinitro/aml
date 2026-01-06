@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Pollution Analysis - Aktobe, Kazakhstan</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --text: #333;
+            --bg: #f4f4f4;
+            --slide-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            /* Hide scrollbars for slide effect */
+        }
+
+        .slides-container {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
+            padding: 40px 80px;
+            background-color: var(--slide-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow-y: auto;
+            /* Allow scrolling within slide if content is long */
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--secondary);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-top: 1.5rem;
+        }
+
+        p,
+        li {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            border-left: 5px solid var(--secondary);
+            padding: 20px;
+            padding-left: 40px;
+            margin: 20px 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .img-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        img {
+            max-width: 90%;
+            max-height: 60vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        img:hover {
+            transform: scale(1.02);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 20px;
+            margin: 0 5px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: var(--secondary);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.5s;
+            z-index: 1001;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 1rem;
+            color: #888;
+        }
+
+        /* Title Slide Specifics */
+        .title-slide {
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .title-slide h1 {
+            font-size: 4.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            p,
+            li {
+                font-size: 1.1rem;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>Air Pollution Analysis</h1>
+            <h2>Aktobe, Kazakhstan</h2>
+            <p style="font-size: 1.8rem; margin-top: 2rem;">A Data-Driven Assessment of Air Quality</p>
+            <p><strong>Student:</strong> Angsar Shaumen (255782@astanait.edu.kz)</p>
+            <p><strong>Course:</strong> Applied Machine Learning - Task 1</p>
+            <p><strong>Date:</strong> December 2025</p>
+        </div>
+
+        <!-- Slide 2: Problem Statement -->
+        <div class="slide">
+            <h2>The Challenge</h2>
+            <div class="grid-2">
+                <div>
+                    <p><strong>Aktobe</strong> is a major industrial hub in Western Kazakhstan, facing significant
+                        environmental challenges.</p>
+                    <ul>
+                        <li><strong>Population:</strong> ~500,000 residents</li>
+                        <li><strong>Key Industries:</strong> Oil & Gas, Metallurgy, Chemicals</li>
+                        <li><strong>Climate:</strong> Severe continental (cold winters, hot summers)</li>
+                    </ul>
+                    <div class="stat-box">
+                        <p class="highlight">Research Goal:</p>
+                        <p>To assess the real state of air quality using actual monitoring data, identifying critical
+                            pollutants and seasonal trends.</p>
+                    </div>
+                </div>
+                <div class="img-container">
+                    <!-- Placeholder for a map or city image if available, otherwise generic icon -->
+                    <div style="font-size: 10rem; color: #ccc;">🏭</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Methodology (Real Data) -->
+        <div class="slide">
+            <h2>Data & Methodology</h2>
+            <p>This analysis is based on <strong>real historical monitoring data</strong>.
+            </p>
+
+            <div class="grid-2">
+                <div class="stat-box">
+                    <h3>Data Sources</h3>
+                    <ul>
+                        <li><strong>Stations:</strong> 216661 & 517420</li>
+                        <li><strong>Period:</strong> 2021 - 2025</li>
+                        <li><strong>Valid Parameters:</strong> PM2.5, PM10, Temperature, Humidity</li>
+                    </ul>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <img src="figures/aqicn_source.png" alt="AQICN Source"
+                            style="max-height: 150px; border: 1px solid #ddd;">
+                        <p style="font-size: 0.9rem; margin-top: 5px;"><a href="https://aqicn.org/station/@216661/"
+                                target="_blank" style="color: var(--secondary);">Source: AQICN Station 216661</a></p>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <h3>Processing Pipeline</h3>
+                    <ul>
+                        <li><strong>Parsing:</strong> Custom extraction from HTML-wrapped CSVs</li>
+                        <li><strong>Cleaning:</strong> Handling missing values (zeros as NaN)</li>
+                        <li><strong>Analysis:</strong> WHO standard comparison, Seasonal decomposition</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="font-size: 1rem; color: #666; margin-top: 20px;">*Note: Gaseous pollutant data (NO2, SO2, CO) is
+                primarily available for the late 2024-2025 period.</p>
+        </div>
+
+        <!-- Slide 3b: Algorithmic Approach (AI/ML Context) -->
+        <div class="slide">
+            <h2>Algorithmic & Statistical Framework</h2>
+            <p>Applied AI methodologies used to derive insights from raw sensor data.</p>
+            <div class="grid-2">
+                <div class="stat-box">
+                    <h3>1. Time Series Decomposition</h3>
+                    <p><strong>Model:</strong> Additive ($Y_t = T_t + S_t + R_t$)</p>
+                    <p>Used to mathematically isolate the <strong>seasonal component</strong> (heating impact) from
+                        long-term trends and noise.</p>
+                </div>
+                <div class="stat-box">
+                    <h3>2. Mann-Kendall Trend Test</h3>
+                    <p><strong>Type:</strong> Non-parametric Hypothesis Test</p>
+                    <p>Robustly detects monotonic trends ($H_1$) in pollution levels over time, insensitive to outliers
+                        and missing data.</p>
+                </div>
+                <div class="stat-box">
+                    <h3>3. Linear Interpolation</h3>
+                    <p><strong>Constraint:</strong> <code>limit_direction='forward'</code></p>
+                    <p>Preserves local temporal structure while strictly preventing data leakage (backfilling) from
+                        future to past.</p>
+                </div>
+                <div class="stat-box">
+                    <h3>4. Correlation Analysis</h3>
+                    <p><strong>Metric:</strong> Pearson Coefficient ($r$)</p>
+                    <p>Quantifies the linear dependency between meteorological features (Temp, Wind) and Target (PM2.5).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Key Findings - Overview -->
+        <div class="slide">
+            <h2>Executive Summary: Key Findings</h2>
+            <div class="stat-box" style="border-left-color: var(--accent);">
+                <p><span class="highlight" style="font-size: 2rem;">PM2.5 is the Critical Issue</span></p>
+                <p>While average air quality is often "Good", fine particulate matter (PM2.5) consistently exceeds
+                    safety limits during specific periods.</p>
+            </div>
+            <ul>
+                <li><strong>Annual Mean PM2.5:</strong> 13.76 μg/m³ (<span class="highlight">2.75x WHO Limit</span>)
+                </li>
+                <li><strong>Annual Mean PM10:</strong> 15.36 μg/m³ (Borderline WHO Limit)</li>
+                <li><strong>Exceedance Days:</strong> 22.5% of days exceed daily PM2.5 safety limits</li>
+                <li><strong>Heating Season Impact:</strong> Pollution rises significantly in winter</li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Time Series Analysis -->
+        <div class="slide">
+            <h2>Pollution Over Time</h2>
+            <p>Long-term trends show the fluctuation of particulate matter.</p>
+            <div class="img-container">
+                <img src="figures/01_time_series.png" alt="Time Series Analysis of PM2.5 and PM10">
+            </div>
+            <p class="highlight">Observation: Clear spikes in pollution levels are visible, corresponding to winter
+                months.</p>
+        </div>
+
+        <!-- Slide 6: Seasonal Patterns -->
+        <div class="slide">
+            <h2>Seasonal Variations</h2>
+            <p>The impact of the heating season is undeniable.</p>
+            <div class="grid-2">
+                <div class="img-container">
+                    <img src="figures/02_seasonal_PM2.5.png" alt="Seasonal Boxplot PM2.5">
+                </div>
+                <div>
+                    <h3>Winter Crisis</h3>
+                    <ul>
+                        <li><strong>October - April:</strong> Significant elevation in PM2.5</li>
+                        <li><strong>Drivers:</strong>
+                            <ul>
+                                <li>Residential heating (Coal/Gas)</li>
+                                <li>Temperature inversions trapping pollutants</li>
+                                <li>Increased fuel consumption</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Heating Season Impact -->
+        <div class="slide">
+            <h2>Heating vs. Non-Heating Season</h2>
+            <p>Quantifying the winter penalty on air quality.</p>
+            <div class="img-container">
+                <img src="figures/05_heating_comparison.png" alt="Heating Season Comparison">
+            </div>
+            <div class="stat-box">
+                <p><strong>+54% Increase</strong> in PM2.5 levels during the heating season compared to non-heating
+                    months.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: WHO Standards Compliance -->
+        <div class="slide">
+            <h2>WHO Standards Exceedance</h2>
+            <p>How often is the air unsafe to breathe?</p>
+            <div class="grid-2">
+                <div class="img-container">
+                    <img src="figures/06_who_exceedance.png" alt="WHO Exceedance Chart">
+                </div>
+                <div>
+                    <h3>Critical Stats</h3>
+                    <ul>
+                        <li><strong>PM2.5 Daily Limit (15 μg/m³):</strong> Exceeded on <span
+                                class="highlight">22.5%</span> of days.</li>
+                        <li><strong>PM10 Daily Limit (45 μg/m³):</strong> Exceeded on 2.7% of days.</li>
+                    </ul>
+                    <p>This indicates a chronic exposure risk for sensitive populations during winter.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Gaseous Pollutants -->
+        <div class="slide">
+            <h2>Gaseous Pollutants (NO2, SO2, CO)</h2>
+            <p>Recent data (Late 2024 - 2025) reveals emerging trends.</p>
+            <div class="grid-2">
+                <div class="stat-box">
+                    <h3>Nitrogen Dioxide (NO2)</h3>
+                    <ul>
+                        <li><strong>Mean:</strong> 28.65 μg/m³ (<span class="highlight">Exceeds WHO Annual Limit of
+                                10</span>)</li>
+                        <li><strong>Max:</strong> 91.95 μg/m³</li>
+                        <li><strong>Source:</strong> Traffic & Industrial Emissions</li>
+                    </ul>
+                </div>
+                <div class="stat-box">
+                    <h3>Sulfur Dioxide (SO2)</h3>
+                    <ul>
+                        <li><strong>Mean:</strong> 13.99 μg/m³</li>
+                        <li><strong>Max:</strong> 53.21 μg/m³ (Exceeds Daily Limit of 40)</li>
+                        <li><strong>Source:</strong> Coal combustion & Industry</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top: 20px;"><strong>Carbon Monoxide (CO):</strong> Mean 489.5 mg/m³, well within safety
+                limits.</p>
+        </div>
+
+        <!-- Slide 10: Air Quality Index (AQI) -->
+        <div class="slide">
+            <h2>AQI Distribution</h2>
+            <p>Overall air quality assessment based on US EPA standards.</p>
+            <div class="img-container">
+                <img src="figures/04_aqi_distribution.png" alt="AQI Distribution">
+            </div>
+            <ul>
+                <li><strong>Good (0-50):</strong> 54.5% of days</li>
+                <li><strong>Moderate (51-100):</strong> 41.8% of days</li>
+                <li><strong>Unhealthy for Sensitive Groups:</strong> 3.7% of days</li>
+            </ul>
+            <p><em>Note: While "Good" days dominate, the "Moderate" portion is significant.</em></p>
+        </div>
+
+        <!-- Slide 10: Recommendations -->
+        <div class="slide">
+            <h2>Recommendations</h2>
+            <div class="grid-2">
+                <div class="stat-box">
+                    <h3>Short Term (1-2 Years)</h3>
+                    <ul>
+                        <li><strong>Expand Monitoring:</strong> Deploy more sensors to cover "blind spots".</li>
+                        <li><strong>Public Alerts:</strong> Real-time warnings during winter inversions.</li>
+                        <li><strong>Traffic Control:</strong> Limit heavy transport in city center during peak
+                            pollution.</li>
+                    </ul>
+                </div>
+                <div class="stat-box" style="border-left-color: var(--accent);">
+                    <h3>Long Term (3-5 Years)</h3>
+                    <ul>
+                        <li><strong>Heating Modernization:</strong> Subsidize transition from coal to gas/electric
+                            heating.</li>
+                        <li><strong>Industrial Filters:</strong> Enforce stricter emission controls on local factories.
+                        </li>
+                        <li><strong>Urban Greening:</strong> Increase green belts to aid pollutant dispersion.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide">
+            <h2>Conclusion</h2>
+            <p>This data-driven analysis confirms that <strong>Aktobe faces a seasonal air quality challenge</strong>.
+            </p>
+            <ul>
+                <li>The primary pollutant of concern is <strong>PM2.5</strong>.</li>
+                <li>The problem is heavily concentrated in the <strong>heating season</strong>.</li>
+                <li>While annual averages are moderate, the <strong>winter peaks</strong> pose health risks.</li>
+            </ul>
+            <div style="margin-top: 40px; text-align: center;">
+                <h3 style="color: var(--secondary);">Thank You</h3>
+                <p>Questions?</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- <div class="controls">
+        <button id="prevBtn" onclick="moveSlide(-1)">❮ Previous</button>
+        <span id="slideIndicator" style="margin: 0 10px; font-weight: bold;">1 / 13</span>
+        <button id="nextBtn" onclick="moveSlide(1)">Next ❯</button>
+    </div> -->
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slidesContainer');
+        const progressBar = document.getElementById('progressBar');
+        const indicator = document.getElementById('slideIndicator');
+        const totalSlides = slides.length;
+
+        function updateSlide() {
+            container.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+            indicator.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateSlide();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') moveSlide(1);
+            if (e.key === 'ArrowLeft') moveSlide(-1);
+        });
+
+        // Initialize
+        updateSlide();
+    </script>
+
+</body>
+
+</html>

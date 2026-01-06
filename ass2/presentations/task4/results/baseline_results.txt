@@ -1,0 +1,9 @@
+Baseline SVM Accuracy: 0.8606
+              precision    recall  f1-score   support
+
+           0       0.99      0.64      0.77       234
+           1       0.82      0.99      0.90       390
+
+    accuracy                           0.86       624
+   macro avg       0.90      0.82      0.84       624
+weighted avg       0.88      0.86      0.85       624
