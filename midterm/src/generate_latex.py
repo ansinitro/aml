@@ -1,0 +1,225 @@
+
+import os
+import json
+
+# Configuration
+TEX_FILE = "report/midterm_report.tex"
+
+def generate_latex():
+    latex_content = r"""\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref} % hidelinks removes colored boxes/text
+
+% Geometry
+\geometry{
+    left=25mm,
+    right=25mm,
+    top=25mm,
+    bottom=25mm,
+}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Midterm: Clustering \& Dimensionality Reduction}
+\lhead{Angsar Shaumen}
+\cfoot{\thepage}
+
+% Title Info
+\title{
+    \textbf{Midterm Project: Clustering and Dimensionality Reduction Analysis} \\
+    \vspace{0.5cm}
+    \large Advanced Machine Learning \\
+    \large Astana IT University (AITU)
+}
+\author{Angsar Shaumen}
+\date{January 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Clustering and dimensionality reduction are two pillars of unsupervised machine learning. Clustering algorithms, such as Density-Based Spatial Clustering of Applications with Noise (DBSCAN) \cite{ester1996dbscan}, allow us to uncover hidden structures in unlabeled data by grouping similar instances based on density rather than simple distance to a centroid. Dimensionality reduction techniques, such as Principal Component Analysis (PCA) \cite{jolliffe2002pca} and t-Distributed Stochastic Neighbor Embedding (t-SNE) \cite{maaten2008tsne}, enable the visualization of high-dimensional data by projecting it into a lower-dimensional space.
+
+The objective of this study is twofold:
+\begin{enumerate}
+    \item \textbf{Clustering:} To implement and evaluate the DBSCAN algorithm on the ``Mall Customers'' dataset, exploring the impact of its hyperparameters ($eps$ and $min\_samples$) and comparing it against the traditional K-Means algorithm.
+    \item \textbf{Dimensionality Reduction:} To apply and compare PCA (linear) and t-SNE (non-linear) techniques on the MNIST written digits dataset to understand their efficacy in preserving global versus local data structures.
+\end{enumerate}
+
+\section{Theoretical Background}
+
+\subsection{DBSCAN}
+DBSCAN groups points that are closely packed together. It distinguishes between three types of points:
+\begin{itemize}
+    \item \textbf{Core Points:} Have at least $min\_samples$ points within distance $eps$.
+    \item \textbf{Border Points:} Reachable from a core point but have fewer than $min\_samples$ neighbors.
+    \item \textbf{Noise Points:} Not reachable from any core point.
+\end{itemize}
+
+Unlike K-Means, DBSCAN does not require specifying the number of clusters \textit{a priori}, can find arbitrarily shaped clusters, and is robust to outliers \cite{ester1996dbscan}.
+
+\subsection{PCA vs. t-SNE}
+\begin{itemize}
+    \item \textbf{PCA:} A linear transformation that projects data onto orthogonal axes maximizing variance. It preserves global structure.
+    \item \textbf{t-SNE:} A non-linear probabilistic technique that minimizes the Kullback-Leibler divergence between high-dimensional and low-dimensional distributions. It excels at preserving local neighborhoods \cite{maaten2008tsne}.
+\end{itemize}
+
+\section{Methodology}
+
+\subsection{Data Description}
+\textbf{Mall Customers Dataset:} Used for clustering. Contains features: Customer ID, Gender, Age, Annual Income (k\$), Spending Score (1-100). We selected \textit{Annual Income} and \textit{Spending Score} for analysis.
+
+\noindent \textbf{MNIST Dataset:} Used for dimensionality reduction \cite{lecun1998mnist}. Contains 70,000 grayscale images of handwritten digits. We used a subset of 5,000 samples for computational efficiency.
+
+\subsection{Implementation}
+All algorithms were implemented in Python using \texttt{scikit-learn} \cite{scikit-learn}. 
+\begin{itemize}
+    \item \textbf{Clustering:} We performed a parameter sweep for DBSCAN ($eps \in [0.1, 1.0]$, $min\_samples \in \{3, 5, 10, 20\}$).
+    \item \textbf{Visualization:} Results were scaled using \texttt{StandardScaler} before processing.
+\end{itemize}
+
+\section{Results and Discussion}
+
+\subsection{Clustering Analysis (Mall Customers)}
+The optimal configuration for DBSCAN was found to be \textbf{eps=0.35} and \textbf{min\_samples=3}, maximizing the Silhouette Score.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/best_dbscan_clusters.png}
+    \caption{Best DBSCAN Clustering Result. The algorithm successfully isolates distinct spending behaviors and identifies outliers (black crosses).}
+    \label{fig:dbscan_best}
+\end{figure}
+
+\subsubsection{Sensitivity Analysis}
+Increasing $eps$ rapidly reduces the number of clusters. As shown in Figure \ref{fig:sensitivity}, the stable region is between $0.3$ and $0.5$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/exercise1_sensitivity.png}
+    \caption{Sensitivity Analysis: Effect of $eps$ and $min\_samples$ on Clusters and Noise. Note how higher $min\_samples$ (lighter colors) requires higher $eps$ to form clusters.}
+    \label{fig:sensitivity}
+\end{figure}
+
+\subsubsection{Comparison with K-Means}
+K-Means forces all points, including outliers, into spherical clusters (Figure \ref{fig:kmeans}). DBSCAN provides cleaner segmentation by explicitly marking outliers as noise.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/exercise3_kmeans_comparison.png}
+    \caption{K-Means Clustering Comparison. Note how outliers are forced into clusters.}
+    \label{fig:kmeans}
+\end{figure}
+
+\subsection{Dimensionality Reduction (MNIST)}
+
+\subsubsection{PCA (Global Structure)}
+PCA captures global variance but overlaps complex digits (Figure \ref{fig:pca}). It fails to clearly separate the non-linear manifold of the digits.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/mnist_pca.png}
+    \caption{PCA Projection of MNIST. Digits overlap significantly.}
+    \label{fig:pca}
+\end{figure}
+
+\subsubsection{t-SNE (Local Structure)}
+t-SNE successfully unrolls the manifold, creating distinct, well-separated islands for each digit (Figure \ref{fig:tsne}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/mnist_tsne.png}
+    \caption{t-SNE Projection of MNIST. Clear separation of digit clusters.}
+    \label{fig:tsne}
+\end{figure}
+
+\section{Conclusion}
+This study demonstrated that DBSCAN is superior to K-Means for datasets with noise and non-spherical clusters, provided parameters are carefully tuned. For high-dimensional data like MNIST, t-SNE serves as a much more powerful visualization tool than PCA, effectively revealing class separability.
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{ester1996dbscan}
+Ester, M., Kriegel, H. P., Sander, J., \& Xu, X. (1996).
+A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise.
+\textit{KDD-96 Proceedings}, 226--231.
+
+\bibitem{maaten2008tsne}
+Van der Maaten, L., \& Hinton, G. (2008).
+Visualizing Data using t-SNE.
+\textit{Journal of Machine Learning Research}, 9(11).
+
+\bibitem{jolliffe2002pca}
+Jolliffe, I. T. (2002).
+\textit{Principal Component Analysis}. Springer Series in Statistics.
+
+\bibitem{lecun1998mnist}
+LeCun, Y., Cortes, C., \& Burges, C. J. (1998).
+The MNIST Database of Handwritten Digits.
+Available at \url{http://yann.lecun.com/exdb/mnist/}
+
+\bibitem{scikit-learn}
+Pedregosa, F., et al. (2011).
+Scikit-learn: Machine Learning in Python.
+\textit{Journal of Machine Learning Research}, 12, 2825--2830.
+
+\end{thebibliography}
+
+\newpage
+\appendix
+\section{Control Questions Answers}
+
+\subsection{DBSCAN}
+\begin{enumerate}
+    \item \textbf{What are eps and min\_samples?} $eps$ is the neighborhood radius; $min\_samples$ is the minimum neighbors required to form a dense region.
+    \item \textbf{Why can DBSCAN detect arbitrary shapes?} It uses density connectivity (chaining) rather than centroid distance.
+    \item \textbf{What does label -1 mean?} It represents Noise (Outliers).
+    \item \textbf{When is DBSCAN not suitable?} High-dimensional data (curse of dimensionality) or varying density clusters.
+    \item \textbf{How to select eps?} Using the k-distance graph (elbow method).
+\end{enumerate}
+
+\subsection{t-SNE}
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item \textbf{Main objective?} Visualize high-dimensional data in low dimensions while preserving local structure.
+    \item \textbf{Similarity modeling?} High-dim: Gaussian; Low-dim: Student's t-distribution.
+    \item \textbf{Role of KL divergence?} It is the cost function to be minimized.
+    \item \textbf{Effect of perplexity?} Balances local vs. global attention (effective number of neighbors).
+    \item \textbf{Why different results?} Non-convex cost function and random initialization.
+\end{enumerate}
+
+\subsection{PCA}
+\begin{enumerate}
+    \setcounter{enumi}{10}
+    \item \textbf{Mathematical goal?} Maximize variance along orthogonal components.
+    \item \textbf{Difference from t-SNE?} PCA preserves global structure (linear); t-SNE preserves local (non-linear).
+    \item \textbf{Why faster?} Deterministic linear algebra vs. iterative optimization.
+    \item \textbf{When preferable?} Fore preprocessing, noise reduction, or needing global geometry.
+\end{enumerate}
+
+\subsection{Comparison}
+\begin{enumerate}
+    \setcounter{enumi}{14}
+    \item \textbf{Preservation?} Local: t-SNE; Global: PCA.
+    \item \textbf{Clearer for MNIST?} t-SNE, because digits lie on a non-linear manifold.
+\end{enumerate}
+
+\end{document}
+"""
+    with open(TEX_FILE, "w") as f:
+        f.write(latex_content)
+    print(f"LaTeX report generated at {TEX_FILE}")
+
+if __name__ == "__main__":
+    generate_latex()
