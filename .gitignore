@@ -1,5 +1,30 @@
 **/venv/
 **/.venv/
+**/env/
 **/gtd_dataset.csv
 **/__pycache__/
 temp/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Generated PDFs (optional, un-comment if you don't want to track PDFs)
+# *.pdf
+
+# Python artifacts
+*.pyc
+*.pyo
+*.pyd
+
+# Clean up large files/archives
+*.zip
+*.tar.gz
+
+# ML artifacts
+catboost_info/
