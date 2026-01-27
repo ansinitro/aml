@@ -1,0 +1,147 @@
+
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{titlesec}
+\usepackage{setspace}
+\onehalfspacing
+
+\title{\textbf{Case Study 7: Design, Evaluation, and Optimization of Recommender Systems}}
+\author{Adilet Akhmedov \\ Angsar Shaumen \\ Assanali Rymgali \\ Bekzat Sundetkhan \\ Sanzhar Syzdykov}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This case study explores the design and evaluation of recommender systems in an e-commerce context using the MovieLens dataset. We implement and compare two fundamental approaches: Content-Based Filtering using TF-IDF and Cosine Similarity, and Collaborative Filtering using Singular Value Decomposition (SVD). Our results demonstrate that while both models are effective, SVD with mean centering achieves a slightly superior RMSE of 0.93 and better precision at lower K values. The study highlights the importance of handling data sparsity and suggests hybrid approaches for future optimization.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Recommender systems have become indispensable tools in the digital economy, driving user engagement and sales on platforms like Amazon, Netflix, and Spotify. By filtering vast catalogs of information to provide personalized suggestions, these systems solve the problem of information overload.
+
+This report documents the implementation of a recommender system pipeline. The primary objectives are to:
+\begin{enumerate}
+    \item Understand the fundamental algorithms of recommendation (Content-Based vs. Collaborative).
+    \item Implement these algorithms using Python.
+    \item Evaluate their performance using metric such as RMSE and Precision@K.
+    \item Analyze the challenges posed by real-world data, such as sparsity.
+\end{enumerate}
+
+\section{Literature Review}
+The field of recommender systems has evolved significantly since the mid-1990s.
+\begin{itemize}
+    \item \textbf{Collaborative Filtering}: Early work by Resnick et al. (1994) on GroupLens introduced the concept of automated collaborative filtering. Later, matrix factorization techniques gained prominence during the Netflix Prize competition, with Koren et al. (2009) demonstrating the superiority of SVD-based methods.
+    \item \textbf{Content-Based Filtering}: Pazzani and Billsus (2007) formalized content-based recommendation, which relies on item attributes. This approach avoids the "cold-start" problem for new items but suffers from over-specialization.
+    \item \textbf{Evaluation Metrics}: Herlocker et al. (2004) provided a comprehensive review of evaluation metrics, emphasizing that accuracy (RMSE) alone is insufficient, and ranking metrics like Precision and Recall are crucial for top-N recommendation tasks.
+\end{itemize}
+
+\section{Methodology}
+
+\subsection{Dataset}
+We utilized the \textbf{MovieLens Latest Small} dataset, a standard benchmark in the field.
+\begin{itemize}
+    \item \textbf{Ratings}: 100,000 ratings from 610 users on 9,724 movies.
+    \item \textbf{Sparsity}: The interaction matrix is highly sparse ($>98\%$ empty), presenting a significant challenge for collaborative filtering.
+    \item \textbf{Preprocessing}: Data was merged with movie metadata (genres) and split into training (80\%) and testing (20\%) sets using a random split strategy.
+\end{itemize}
+
+\subsection{Models}
+
+\subsubsection{Content-Based Filtering}
+The Content-Based model constructs item profiles using movie genres.
+\begin{enumerate}
+    \item \textbf{Feature Extraction}: We applied Term Frequency-Inverse Document Frequency (TF-IDF) vectorization to the "genres" field.
+    \item \textbf{Similarity}: Cosine Similarity was computed between all pairs of movies.
+    \item \textbf{Prediction}: For a user $u$ and item $i$, the predicted rating is the weighted average of ratings given by $u$ to items similar to $i$.
+\end{enumerate}
+
+\subsubsection{Collaborative Filtering (SVD)}
+We implemented a model-based approach using low-rank Matrix Factorization.
+\begin{enumerate}
+    \item \textbf{Matrix Construction}: A User-Item rating matrix $R$ was created.
+    \item \textbf{Normalization}: User biases were removed by subtracting the mean rating of each user (Mean Centering). Missing values were filled with 0 (representing the mean).
+    \item \textbf{Decomposition}: Truncated Singular Value Decomposition (SVD) was applied to factorize the centered matrix into orthogonal components.
+    \item \textbf{Reconstruction}: The matrix was approximated using the top $k=20$ latent features to predict missing entries.
+\end{enumerate}
+
+\section{Results}
+
+\subsection{Quantitative Metrics}
+Table \ref{tab:metrics} presents the performance of both models on the test set.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Model & RMSE & Precision@10 & Recall@10 \\
+\midrule
+Content-Based & 0.9222 & 0.5066 & 0.4740 \\
+Collaborative-Filtering & 0.9304 & 0.5169 & 0.4665 \\
+
+\bottomrule
+\end{tabular}
+\caption{Performance Metrics Comparison}
+\label{tab:metrics}
+\end{table}
+
+\subsection{Visualizations}
+
+Figure \ref{fig:dist} shows the distribution of ratings, indicating a negativity bias is not present; users tend to rate movies they like (3.0-5.0).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/rating_distribution.png}
+    \caption{Distribution of Ratings}
+    \label{fig:dist}
+\end{figure}
+
+The sparsity of the data is visualized in Figure \ref{fig:heat}, which shows interactions only for the top 50 users and movies.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/interaction_heatmap.png}
+    \caption{User-Item Interaction Heatmap (Top 50 Subset)}
+    \label{fig:heat}
+\end{figure}
+
+Figure \ref{fig:pk} illustrates the Precision@K curve. As expected, precision decreases as $K$ increases, but SVD maintains better stability.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/precision_k_curve.png}
+    \caption{Precision at K (Ranking Quality)}
+    \label{fig:pk}
+\end{figure}
+
+\section{Discussion}
+Our method comparison reveals that **Collaborative Filtering** slightly outperforms the Content-Based approach in both RMSE and top-N ranking metrics. The mean-centering step was critical; without it, the SVD model biased predictions towards zero (missing values), resulting in high error.
+
+The Content-Based model performed surprisingly well given it only used Genres. However, it is limited by its inability to recommend items outside a user's known genre preferences (the "serendipity" problem). SVD, by learning latent factors, can capture cross-genre correlations.
+
+\section{Conclusion}
+We successfully designed and evaluated two recommender systems. The SVD-based collaborative filtering approach demonstrated robust performance. Future work should focus on **Hybrid Systems**, combining the cold-start resilience of content-based models with the accuracy of collaborative filtering, and incorporating temporal dynamics (e.g., handling changing user tastes over time).
+
+\begin{thebibliography}{9}
+
+\bibitem{resnick}
+Resnick, P., Iacovou, N., Suchak, M., Bergstrom, P., \& Riedl, J. (1994). GroupLens: an open architecture for collaborative filtering of netnews. \textit{Proceedings of CSCW '94}.
+
+\bibitem{sarwar}
+Sarwar, B., Karypis, G., Konstan, J., \& Riedl, J. (2001). Item-based collaborative filtering recommendation algorithms. \textit{Proceedings of WWW '01}.
+
+\bibitem{koren}
+Koren, Y., Bell, R., \& Volinsky, C. (2009). Matrix factorization techniques for recommender systems. \textit{Computer}, 42(8).
+
+\end{thebibliography}
+
+\end{document}
