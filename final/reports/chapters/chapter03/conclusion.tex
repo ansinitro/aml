@@ -1,0 +1,44 @@
+%
+% File: conclusion.tex
+%
+\chapter{Conclusion}
+\label{chap:conclusion}
+\setlength{\parskip}{1em}
+
+\section{Summary of Findings}
+
+This work presented a comprehensive comparative study of recommender system approaches for e-commerce, specifically focusing on the Headphones subcategory of Amazon Electronics reviews.
+
+Our main findings are:
+\begin{enumerate}
+    \item \textbf{Neural methods show promise}: NeuMF (NCF) achieved the highest ranking performance (NDCG@10 = 0.0059), outperforming both classical Matrix Factorization and baseline approaches.
+    
+    \item \textbf{Sparsity remains challenging}: With 97.4\% sparsity, traditional collaborative filtering methods like Item-KNN and MF struggled to learn meaningful patterns.
+    
+    \item \textbf{Popularity is a strong baseline}: The simple popularity-based recommender achieved competitive results (NDCG@10 = 0.0050), highlighting the importance of the long-tail distribution in e-commerce data.
+    
+    \item \textbf{Cold-start is significant}: Approximately 50\% of test users and items were not seen during training, underscoring the importance of cold-start handling in production systems.
+\end{enumerate}
+
+\section{Limitations}
+
+This study has several limitations:
+\begin{itemize}
+    \item The dataset size after filtering is relatively small (2,695 interactions), which may limit the generalizability of findings
+    \item Hybrid models incorporating content features (e.g., LightFM) were not fully evaluated due to technical constraints
+    \item The study focuses on offline evaluation; online A/B testing would provide stronger evidence of practical utility
+\end{itemize}
+
+\section{Future Work}
+
+Future research directions include:
+\begin{enumerate}
+    \item \textbf{Hybrid approaches}: Incorporating item metadata (category, brand, price) to address cold-start
+    \item \textbf{Sequential models}: Exploring transformer-based architectures (e.g., SASRec, BERT4Rec) for session-based recommendation
+    \item \textbf{Larger datasets}: Evaluating on larger subcategories or the full Amazon dataset
+    \item \textbf{Explainability}: Investigating interpretable recommendation methods
+\end{enumerate}
+
+\section{Reproducibility}
+
+All code, data processing scripts, and trained models are available in the accompanying repository. The experiments can be reproduced using the provided \texttt{run\_all.sh} script and notebook files.

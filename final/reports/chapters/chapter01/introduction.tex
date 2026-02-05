@@ -1,0 +1,64 @@
+%
+% File: introduction.tex
+%
+\chapter{Introduction}
+\label{chap:intro}
+\setlength{\parskip}{1em}
+
+\section{Background and Motivation}
+
+Recommender systems have become essential components of modern e-commerce platforms, helping users navigate vast product catalogs and discover relevant items \cite{ricci2011introduction}. Major platforms such as Amazon, Netflix, and Spotify attribute significant portions of their revenue to recommendation-driven engagement.
+
+The fundamental challenge in recommendation lies in learning user preferences from sparse interaction data. Traditional approaches based on collaborative filtering, such as Matrix Factorization, have proven effective by decomposing the user-item interaction matrix into latent factors \cite{koren2009matrix}. However, these linear models may fail to capture the complex, non-linear patterns inherent in user behavior.
+
+Recent advances in deep learning have led to the development of Neural Collaborative Filtering (NCF), which replaces the inner product of latent factors with neural networks capable of learning arbitrary functions \cite{he2017neural}. This approach promises better generalization, particularly in sparse data regimes.
+
+\section{Related Work}
+
+The field of recommender systems has evolved significantly over the past two decades. This section surveys the key approaches relevant to our comparative study.
+
+\textbf{Collaborative Filtering.} The foundational work by Sarwar et al. \cite{sarwar2001item} introduced item-based collaborative filtering, demonstrating that computing similarities between items rather than users provides both computational efficiency and recommendation quality. This approach remains widely used as a baseline in academic research.
+
+\textbf{Matrix Factorization.} The landmark work by Koren et al. \cite{koren2009matrix} established matrix factorization as the dominant paradigm for collaborative filtering. Their SVD++ model extended basic MF with implicit feedback and temporal dynamics, achieving state-of-the-art performance on the Netflix Prize dataset.
+
+\textbf{Implicit Feedback.} Hu et al. \cite{hu2008collaborative} pioneered methods for handling implicit feedback, recognizing that user behavior data (clicks, purchases) differs fundamentally from explicit ratings. Their weighted matrix factorization approach assigns varying confidence levels to observed and unobserved interactions.
+
+\textbf{Learning to Rank.} Rendle et al. \cite{rendle2009bpr} proposed Bayesian Personalized Ranking (BPR), a pairwise learning framework optimized directly for ranking rather than prediction. BPR has become the de facto training objective for many modern recommender systems.
+
+\textbf{Neural Approaches.} He et al. \cite{he2017neural} introduced Neural Collaborative Filtering (NCF), replacing the inner product in MF with a multi-layer perceptron. Their work demonstrated that neural networks can learn more expressive user-item interaction functions, particularly beneficial under sparsity.
+
+\textbf{Hybrid Methods.} The RecSys literature extensively covers hybrid approaches that combine collaborative and content-based signals. The LightFM library provides a practical implementation that learns unified embeddings for users, items, and features. However, hybrid methods require rich item metadata, which is not always available in implicit feedback datasets.
+
+Our work contributes to this literature by providing a systematic comparison across paradigms using a carefully controlled evaluation framework with proper time-based splitting and ranking metrics.
+
+\section{Problem Statement}
+
+This research addresses the following question: \textbf{How do classical, hybrid, and neural recommender systems compare in terms of ranking quality, computational efficiency, and robustness to cold-start scenarios?}
+
+Specifically, we focus on:
+\begin{enumerate}
+    \item Constructing a unique, reproducible dataset from public Amazon reviews
+    \item Implementing representative models from each paradigm (classical, neural)
+    \item Conducting rigorous evaluation using ranking metrics
+    \item Analyzing cold-start behavior and computational trade-offs
+\end{enumerate}
+
+\section{Research Questions}
+
+\begin{enumerate}
+    \item How do classical, hybrid, and neural recommenders compare on ranking metrics?
+    \item Does the neural approach (NCF) consistently outperform Matrix Factorization?
+    \item How do models behave under extreme sparsity conditions?
+    \item What are the computational trade-offs between approaches?
+\end{enumerate}
+
+\section{Contributions}
+
+The main contributions of this work are:
+\begin{itemize}
+    \item A unique dataset derived from Amazon Electronics (Headphones subcategory) with 5-core filtering
+    \item Implementation of four representative recommendation models
+    \item Comprehensive experimental comparison using Precision, Recall, and NDCG metrics
+    \item Analysis of cold-start scenarios and model robustness
+    \item Reproducible codebase and experimental framework
+\end{itemize}

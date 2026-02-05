@@ -1,0 +1,4 @@
+Users: 368
+Items: 282
+Interactions: 2695
+Sparsity: 97.40%

@@ -1,0 +1,3 @@
+Category,Total in Test,Warm (in Train),Cold (NOT in Train),Cold Ratio (%)
+Users,175,163,12,6.857142857142858
+Items,78,38,40,51.28205128205128

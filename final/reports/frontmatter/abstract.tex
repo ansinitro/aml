@@ -1,0 +1,16 @@
+%
+% File: abstract.tex
+%
+\chapter{Abstract}
+\begin{SingleSpace}
+This work investigates the performance, robustness, and practical trade-offs of classical, hybrid, and neural recommender systems for e-commerce under realistic constraints such as data sparsity and cold-start scenarios.
+
+We construct a unique dataset derived from Amazon Electronics reviews, specifically filtering for the Headphones subcategory and applying 5-core filtering to ensure meaningful interaction density. The task is formulated as implicit feedback Top-K recommendation with strict time-based train/validation/test splits to prevent data leakage.
+
+Four representative models are implemented and compared: Popularity-based baseline, Item-KNN collaborative filtering, Matrix Factorization (MF), and Neural Collaborative Filtering (NeuMF/NCF). Evaluation is conducted using ranking metrics including Precision@K, Recall@K, and NDCG@K.
+
+Our experiments reveal that NeuMF achieves the highest NDCG@10 (0.0059), outperforming both classical Matrix Factorization (0.0021) and the Popularity baseline (0.0050). The results demonstrate that neural architectures can effectively capture non-linear user-item interactions even in highly sparse settings (97.4\% sparsity), though popularity remains a strong baseline due to the long-tail distribution of interactions.
+
+\keywords{Recommender Systems; Collaborative Filtering; Neural Networks; E-commerce; Cold-Start Problem}
+
+\end{SingleSpace}
